@@ -106,3 +106,86 @@ html, body, #root {
 .animate-soft-pulse {
   animation: soft-pulse 2.5s ease-in-out infinite;
 }
+
+/* ── Sidebar SVG Icon Animations ── */
+
+/* Base transition for all SVG parts */
+.sidebar-icon * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Play icon (Start) — triangle pulses */
+.sidebar-node-item:hover .icon-inner {
+  transform-origin: center;
+  animation: icon-pop 0.4s ease-out;
+}
+
+/* Task icon — lines draw in staggered */
+.sidebar-node-item:hover .icon-line-1 {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 0;
+  animation: line-draw 0.5s ease-out;
+}
+.sidebar-node-item:hover .icon-line-2 {
+  animation: line-draw 0.5s ease-out 0.1s both;
+}
+.sidebar-node-item:hover .icon-line-3 {
+  animation: line-draw 0.5s ease-out 0.2s both;
+}
+
+/* Approval icon — check mark draws */
+.sidebar-node-item:hover .icon-check {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 0;
+  animation: check-draw 0.5s ease-out 0.15s both;
+}
+
+/* Automated icon — bolt flashes */
+.sidebar-node-item:hover .icon-bolt {
+  animation: bolt-flash 0.5s ease-out;
+}
+
+/* Circle elements pulse on hover */
+.sidebar-node-item:hover .icon-circle {
+  animation: circle-pulse 0.5s ease-out;
+}
+
+@keyframes icon-pop {
+  0% { transform: scale(0.7); opacity: 0.5; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes line-draw {
+  from { stroke-dasharray: 20; stroke-dashoffset: 20; }
+  to { stroke-dasharray: 20; stroke-dashoffset: 0; }
+}
+
+@keyframes check-draw {
+  from { stroke-dasharray: 20; stroke-dashoffset: 20; }
+  to { stroke-dasharray: 20; stroke-dashoffset: 0; }
+}
+
+@keyframes bolt-flash {
+  0% { opacity: 0.4; filter: brightness(1.5); }
+  50% { opacity: 1; filter: brightness(2); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+
+@keyframes circle-pulse {
+  0% { stroke-width: 2; }
+  50% { stroke-width: 3; }
+  100% { stroke-width: 2; }
+}
+
+/* ── Smooth React Flow Edges ── */
+.react-flow__edge-path {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+/* ── Template card hover glow ── */
+@keyframes template-glow {
+  0% { box-shadow: 0 0 0 0 rgba(240, 100, 34, 0); }
+  50% { box-shadow: 0 0 20px 2px rgba(240, 100, 34, 0.08); }
+  100% { box-shadow: 0 0 0 0 rgba(240, 100, 34, 0); }
+}
