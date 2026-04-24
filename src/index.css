@@ -13,46 +13,82 @@
   --theme-primary-dark: #d4561d;
   --theme-primary-light: #fff3ec;
   --theme-text: #0f172a;
+  --theme-text-muted: #64748b;
+  --theme-glass-bg: rgba(255, 255, 255, 0.72);
+  --theme-glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.5);
+  --theme-node-bg: rgba(255, 255, 255, 0.9);
+  --theme-node-text: #1e293b;
 }
 
 [data-theme="ocean"] {
   --theme-bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
-  --theme-primary: #0284c7;
-  --theme-primary-dark: #0369a1;
+  --theme-primary: #0ea5e9;
+  --theme-primary-dark: #0284c7;
   --theme-primary-light: #f0f9ff;
   --theme-text: #0f172a;
+  --theme-text-muted: #64748b;
+  --theme-glass-bg: rgba(255, 255, 255, 0.72);
+  --theme-glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.5);
+  --theme-node-bg: rgba(255, 255, 255, 0.9);
+  --theme-node-text: #0f172a;
 }
 
 [data-theme="midnight"] {
-  --theme-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%);
   --theme-primary: #8b5cf6;
   --theme-primary-dark: #7c3aed;
-  --theme-primary-light: #f5f3ff;
+  --theme-primary-light: rgba(139, 92, 246, 0.15);
   --theme-text: #f8fafc;
+  --theme-text-muted: #94a3b8;
+  --theme-glass-bg: rgba(15, 23, 42, 0.65);
+  --theme-glass-bg-strong: rgba(15, 23, 42, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.08);
+  --theme-node-bg: rgba(30, 41, 59, 0.9);
+  --theme-node-text: #f1f5f9;
 }
 
 [data-theme="forest"] {
   --theme-bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce3 50%, #bbf7d0 100%);
-  --theme-primary: #16a34a;
-  --theme-primary-dark: #15803d;
+  --theme-primary: #10b981;
+  --theme-primary-dark: #059669;
   --theme-primary-light: #f0fdf4;
-  --theme-text: #0f172a;
+  --theme-text: #064e3b;
+  --theme-text-muted: #047857;
+  --theme-glass-bg: rgba(255, 255, 255, 0.65);
+  --theme-glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.6);
+  --theme-node-bg: rgba(255, 255, 255, 0.9);
+  --theme-node-text: #064e3b;
 }
 
 [data-theme="sunset"] {
   --theme-bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 50%, #fecdd3 100%);
-  --theme-primary: #e11d48;
-  --theme-primary-dark: #be123c;
+  --theme-primary: #f43f5e;
+  --theme-primary-dark: #e11d48;
   --theme-primary-light: #fff1f2;
-  --theme-text: #0f172a;
+  --theme-text: #4c0519;
+  --theme-text-muted: #9f1239;
+  --theme-glass-bg: rgba(255, 255, 255, 0.65);
+  --theme-glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.6);
+  --theme-node-bg: rgba(255, 255, 255, 0.9);
+  --theme-node-text: #4c0519;
 }
 
 [data-theme="cyberpunk"] {
   --theme-bg-gradient: linear-gradient(135deg, #18181b 0%, #27272a 50%, #3f3f46 100%);
   --theme-primary: #facc15;
   --theme-primary-dark: #eab308;
-  --theme-primary-light: #fefce8;
-  --theme-text: #f8fafc;
+  --theme-primary-light: rgba(250, 204, 21, 0.15);
+  --theme-text: #fef08a;
+  --theme-text-muted: #a1a1aa;
+  --theme-glass-bg: rgba(24, 24, 27, 0.7);
+  --theme-glass-bg-strong: rgba(24, 24, 27, 0.9);
+  --theme-glass-border: rgba(250, 204, 21, 0.2);
+  --theme-node-bg: rgba(39, 39, 42, 0.9);
+  --theme-node-text: #fef08a;
 }
 
 /* Custom scrollbar */
@@ -92,31 +128,35 @@ html, body, #root {
 
 /* Glassmorphism utility classes */
 .glass {
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--theme-glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--theme-glass-border);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--theme-glass-bg-strong);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--theme-glass-border);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .glass-sidebar {
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--theme-glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  border-right: 1px solid var(--theme-glass-border);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.70);
+  background: var(--theme-glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  border-left: 1px solid var(--theme-glass-border);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 /* Node glow effect on selection */

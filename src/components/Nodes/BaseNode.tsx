@@ -72,16 +72,18 @@ export const BaseNode: React.FC<BaseNodeProps> = ({ id, title, typeLabel, icon, 
           selected ? "node-glow" : "shadow-sm hover:shadow-md",
         )}
         style={{
-          background: 'rgba(255,255,255,0.9)',
+          background: 'var(--theme-node-bg)',
+          color: 'var(--theme-node-text)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           border: validationError
             ? `2px solid ${accentColor}`
             : selected
               ? `2px solid ${accentColor}`
-              : '1px solid rgba(226,232,240,0.6)',
+              : '1px solid var(--theme-glass-border)',
           borderLeftWidth: '3px',
           borderLeftColor: accentColor,
+          transition: 'background 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.2s ease',
         }}
       >
         {/* Validation badge */}
@@ -108,10 +110,10 @@ export const BaseNode: React.FC<BaseNodeProps> = ({ id, title, typeLabel, icon, 
           </div>
 
           {/* Title */}
-          <h3 className="font-bold text-[12px] text-slate-800 leading-tight mb-0.5 truncate">{title}</h3>
+          <h3 className="font-bold text-[12px] leading-tight mb-0.5 truncate" style={{ color: 'var(--theme-node-text)' }}>{title}</h3>
 
           {/* Children content */}
-          <div className="text-xs text-slate-500">
+          <div className="text-xs" style={{ color: 'var(--theme-text-muted)' }}>
             {children}
           </div>
         </div>

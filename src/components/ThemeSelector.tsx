@@ -40,19 +40,19 @@ export function ThemeSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 w-48 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-slate-200/60 overflow-hidden z-50 animate-fade-in">
+        <div className="absolute top-full mt-2 right-0 w-48 glass-strong rounded-xl shadow-xl overflow-hidden z-50 animate-fade-in" style={{ color: 'var(--theme-text)' }}>
           <div className="p-1.5 flex flex-col gap-0.5">
             {THEMES.map((t) => (
               <button
                 key={t.id}
                 onClick={() => { setTheme(t.id); setIsOpen(false); }}
-                className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
-                  theme === t.id 
-                    ? 'bg-slate-100 font-semibold text-slate-900' 
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors hover:bg-black/5"
+                style={{
+                  backgroundColor: theme === t.id ? 'var(--theme-primary-light)' : 'transparent',
+                  fontWeight: theme === t.id ? '600' : '500',
+                }}
               >
-                <div className="w-4 h-4 rounded-full border border-black/10 shadow-sm" style={{ backgroundColor: t.color }}></div>
+                <div className="w-4 h-4 rounded-full shadow-sm" style={{ backgroundColor: t.color }}></div>
                 {t.name}
               </button>
             ))}
