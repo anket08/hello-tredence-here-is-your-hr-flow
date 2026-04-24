@@ -58,52 +58,52 @@ function App() {
       <input ref={fileInputRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
 
       {/* ── Header ── */}
-      <header className="h-14 glass-strong flex items-center justify-between px-5 z-30 shrink-0 shadow-sm">
+      <header className="h-12 bg-[#1a1410] flex items-center justify-between px-5 z-30 shrink-0 border-b border-[#2a2218]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-orange-200/60">
+          <div className="w-8 h-8 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-lg shadow-orange-500/20">
             T
           </div>
           <div className="flex flex-col">
-            <h1 className="font-bold text-[15px] leading-tight tracking-tight text-slate-800">Tredence Studio</h1>
-            <span className="text-[10px] font-medium text-slate-400 leading-tight tracking-wide uppercase">HR Workflow Designer</span>
+            <h1 className="font-semibold text-[14px] leading-tight tracking-tight text-white/90">Tredence Studio</h1>
+            <span className="text-[9px] font-medium text-white/35 leading-tight tracking-widest uppercase">Workflow Designer</span>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           {/* Undo / Redo */}
-          <div className="flex items-center glass rounded-lg p-0.5 mr-1">
-            <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-md text-slate-500 hover:text-slate-800 hover:bg-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Undo (Ctrl+Z)">
-              <Undo2 size={15} />
+          <div className="flex items-center bg-white/5 rounded-lg p-0.5 mr-1 border border-white/5">
+            <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-md text-white/40 hover:text-white hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-colors" title="Undo (Ctrl+Z)">
+              <Undo2 size={14} />
             </button>
-            <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-md text-slate-500 hover:text-slate-800 hover:bg-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Redo (Ctrl+Y)">
-              <Redo2 size={15} />
+            <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-md text-white/40 hover:text-white hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-colors" title="Redo (Ctrl+Y)">
+              <Redo2 size={14} />
             </button>
           </div>
 
           {/* Auto Layout */}
-          <button onClick={autoLayout} className="flex items-center gap-1.5 bg-white/60 hover:bg-white/90 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-slate-200/60 hover:border-slate-300 shadow-sm" title="Auto-arrange nodes">
+          <button onClick={autoLayout} className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 text-white/60 hover:text-white/90 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border border-white/8" title="Auto-arrange nodes">
             <LayoutGrid size={14} />
             Auto-layout
           </button>
 
           {/* Load Sample */}
-          <button onClick={loadSampleWorkflow} className="flex items-center gap-1.5 bg-[#f06422]/10 hover:bg-[#f06422]/20 text-[#d4561d] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-[#f06422]/20 hover:border-[#f06422]/40">
+          <button onClick={loadSampleWorkflow} className="flex items-center gap-1.5 bg-[#f06422]/15 hover:bg-[#f06422]/25 text-[#f06422] px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border border-[#f06422]/20">
             <Wand2 size={14} />
             Sample
           </button>
 
           {/* Separator */}
-          <div className="w-px h-6 bg-slate-200/60 mx-1"></div>
+          <div className="w-px h-5 bg-white/10 mx-1"></div>
 
           {/* Import */}
-          <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-1.5 bg-white/60 hover:bg-white/90 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-slate-200/60 hover:border-slate-300 shadow-sm">
+          <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 text-white/60 hover:text-white/90 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border border-white/8">
             <Upload size={14} />
             Import
           </button>
 
           {/* Export */}
-          <button onClick={handleDownload} className="flex items-center gap-1.5 bg-white/60 hover:bg-white/90 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-slate-200/60 hover:border-slate-300 shadow-sm">
+          <button onClick={handleDownload} className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 text-white/60 hover:text-white/90 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border border-white/8">
             <Download size={14} />
             Export
           </button>
