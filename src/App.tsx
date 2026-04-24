@@ -16,15 +16,17 @@ function App() {
   const redo = useStore((s) => s.redo);
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
-  const history = useStore((s) => s.history);
-  const historyIndex = useStore((s) => s.historyIndex);
+  const past = useStore((s) => s.past);
+  const future = useStore((s) => s.future);
+  const sandboxOpen = useStore((s) => s.sandboxOpen);
+  const setSandboxOpen = useStore((s) => s.setSandboxOpen);
 
   const [showTemplates, setShowTemplates] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
 
-  const canUndo = historyIndex >= 0;
-  const canRedo = historyIndex < history.length - 1;
+  const canUndo = past.length > 0;
+  const canRedo = future.length > 0;
 
   const handleDownload = () => {
     const payload = { name: activeTab.name, nodes: activeTab.nodes, edges: activeTab.edges };
@@ -88,7 +90,7 @@ function App() {
           <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
 
           {/* Arrange */}
-          <button onClick={autoLayout} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-violet-700 hover:bg-violet-50/80 transition-all" title="Auto-arrange nodes (Dagre)">
+          <button onClick={autoLayout} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-violet-700 hover:bg-violet-50/80 transition-all" title="Auto-arrange nodes">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <rect x="3" y="3" width="7" height="7" rx="1.5" />
               <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -99,7 +101,7 @@ function App() {
           </button>
 
           {/* Quick Build */}
-          <button onClick={loadSampleWorkflow} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-[#f06422] hover:bg-orange-50/80 transition-all" title="Load a sample HR workflow">
+          <button onClick={loadSampleWorkflow} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-[#f06422] hover:bg-orange-50/80 transition-all" title="Load sample workflow">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="13,2 3,14 12,14 11,22 21,10 12,10" />
             </svg>
@@ -107,7 +109,7 @@ function App() {
           </button>
 
           {/* Templates */}
-          <button onClick={() => setShowTemplates(true)} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-blue-700 hover:bg-blue-50/80 transition-all" title="Choose from preset templates">
+          <button onClick={() => setShowTemplates(true)} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-blue-700 hover:bg-blue-50/80 transition-all" title="Preset templates">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <rect x="3" y="3" width="18" height="18" rx="3" />
               <line x1="3" y1="9" x2="21" y2="9" />
@@ -119,7 +121,7 @@ function App() {
           <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
 
           {/* Export */}
-          <button onClick={handleDownload} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50/80 transition-all" title="Download as JSON">
+          <button onClick={handleDownload} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50/80 transition-all" title="Export JSON">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2v-4" />
               <polyline points="7,10 12,15 17,10" />
@@ -129,7 +131,7 @@ function App() {
           </button>
 
           {/* Import */}
-          <button onClick={() => fileInputRef.current?.click()} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-amber-700 hover:bg-amber-50/80 transition-all" title="Import from JSON file">
+          <button onClick={() => fileInputRef.current?.click()} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-amber-700 hover:bg-amber-50/80 transition-all" title="Import JSON">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2v-4" />
               <polyline points="17,8 12,3 7,8" />
@@ -139,8 +141,20 @@ function App() {
           </button>
         </div>
 
-        {/* Right side - empty for balance */}
-        <div className="w-[100px]"></div>
+        {/* Right side — Test Workflow button */}
+        <button
+          onClick={() => setSandboxOpen(!sandboxOpen)}
+          className={`group flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            sandboxOpen
+              ? 'bg-[#f06422] text-white shadow-md shadow-orange-200/50'
+              : 'bg-[#f06422]/10 text-[#d4561d] hover:bg-[#f06422]/20 border border-[#f06422]/20 hover:border-[#f06422]/40'
+          }`}
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill={sandboxOpen ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="6,3 20,12 6,21" />
+          </svg>
+          {sandboxOpen ? 'Close Sandbox' : 'Test Workflow'}
+        </button>
       </header>
 
       {/* ── Tab Bar ── */}
@@ -151,9 +165,9 @@ function App() {
         <Sidebar />
         <div className="flex-1 relative">
           <WorkflowCanvas />
-          <SandboxPanel />
         </div>
-        <PropertiesPanel />
+        {/* Right panel — either Properties or Sandbox */}
+        {sandboxOpen ? <SandboxPanel /> : <PropertiesPanel />}
       </main>
 
       {/* ── Status Bar ── */}

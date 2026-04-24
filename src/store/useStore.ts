@@ -16,8 +16,8 @@ export interface WorkflowTab {
   edges: WorkflowEdge[];
 }
 
-// ─── Undo/Redo History ───
-interface HistoryEntry {
+// ─── Snapshot for undo/redo ───
+interface Snapshot {
   nodes: WorkflowNode[];
   edges: WorkflowEdge[];
 }
@@ -27,15 +27,14 @@ export interface StoreState {
   tabs: WorkflowTab[];
   activeTabId: string;
   selectedNodeId: string | null;
+  sandboxOpen: boolean;
 
-  // Undo / Redo
-  history: HistoryEntry[];
-  historyIndex: number;
-  pushHistory: () => void;
+  // Undo / Redo (past/future stacks)
+  past: Snapshot[];
+  future: Snapshot[];
+  saveSnapshot: () => void;
   undo: () => void;
   redo: () => void;
-  canUndo: () => boolean;
-  canRedo: () => boolean;
 
   // Tab actions
   addTab: () => void;
@@ -54,6 +53,7 @@ export interface StoreState {
   loadSampleWorkflow: () => void;
   autoLayout: () => void;
   importWorkflow: (json: string) => void;
+  setSandboxOpen: (open: boolean) => void;
 }
 
 // ─── Helpers ───
@@ -91,51 +91,58 @@ function getActive(tabs: WorkflowTab[], id: string): WorkflowTab {
   return tabs.find((t) => t.id === id) || tabs[0];
 }
 
-const MAX_HISTORY = 50;
+const MAX_HISTORY = 40;
 
 // ─── Store ───
 export const useStore = create<StoreState>((set, get) => ({
   tabs: [defaultTab],
   activeTabId: defaultTab.id,
   selectedNodeId: null,
-  history: [],
-  historyIndex: -1,
+  sandboxOpen: false,
+  past: [],
+  future: [],
 
-  // ── Undo / Redo ──
-  pushHistory: () => {
-    const { tabs, activeTabId, history, historyIndex } = get();
+  // ── Undo / Redo (past/future stack approach) ──
+  saveSnapshot: () => {
+    const { tabs, activeTabId, past } = get();
     const active = getActive(tabs, activeTabId);
-    const entry: HistoryEntry = { nodes: structuredClone(active.nodes), edges: structuredClone(active.edges) };
-    const trimmed = history.slice(0, historyIndex + 1);
-    trimmed.push(entry);
-    if (trimmed.length > MAX_HISTORY) trimmed.shift();
-    set({ history: trimmed, historyIndex: trimmed.length - 1 });
+    const snap: Snapshot = { nodes: structuredClone(active.nodes), edges: structuredClone(active.edges) };
+    const newPast = [...past, snap];
+    if (newPast.length > MAX_HISTORY) newPast.shift();
+    set({ past: newPast, future: [] }); // clear future on new action
   },
 
   undo: () => {
-    const { history, historyIndex, tabs, activeTabId } = get();
-    if (historyIndex < 0) return;
-    const entry = history[historyIndex];
+    const { past, future, tabs, activeTabId } = get();
+    if (past.length === 0) return;
+    const active = getActive(tabs, activeTabId);
+    // Save current state to future
+    const currentSnap: Snapshot = { nodes: structuredClone(active.nodes), edges: structuredClone(active.edges) };
+    const newPast = [...past];
+    const prev = newPast.pop()!;
     set({
-      tabs: updateActiveTab(tabs, activeTabId, { nodes: entry.nodes, edges: entry.edges }),
-      historyIndex: historyIndex - 1,
+      tabs: updateActiveTab(tabs, activeTabId, { nodes: prev.nodes, edges: prev.edges }),
+      past: newPast,
+      future: [currentSnap, ...future],
       selectedNodeId: null,
     });
   },
 
   redo: () => {
-    const { history, historyIndex, tabs, activeTabId } = get();
-    if (historyIndex >= history.length - 1) return;
-    const entry = history[historyIndex + 1];
+    const { past, future, tabs, activeTabId } = get();
+    if (future.length === 0) return;
+    const active = getActive(tabs, activeTabId);
+    // Save current state to past
+    const currentSnap: Snapshot = { nodes: structuredClone(active.nodes), edges: structuredClone(active.edges) };
+    const newFuture = [...future];
+    const next = newFuture.shift()!;
     set({
-      tabs: updateActiveTab(tabs, activeTabId, { nodes: entry.nodes, edges: entry.edges }),
-      historyIndex: historyIndex + 1,
+      tabs: updateActiveTab(tabs, activeTabId, { nodes: next.nodes, edges: next.edges }),
+      past: [...past, currentSnap],
+      future: newFuture,
       selectedNodeId: null,
     });
   },
-
-  canUndo: () => get().historyIndex >= 0,
-  canRedo: () => get().historyIndex < get().history.length - 1,
 
   // ── Tab management ──
   addTab: () => {
@@ -146,7 +153,7 @@ export const useStore = create<StoreState>((set, get) => ({
       nodes: [{ id: 'start-1', type: 'start', position: { x: 300, y: 60 }, data: { type: 'start', title: 'Start' } }],
       edges: [],
     };
-    set({ tabs: [...get().tabs, newTab], activeTabId: id, selectedNodeId: null, history: [], historyIndex: -1 });
+    set({ tabs: [...get().tabs, newTab], activeTabId: id, selectedNodeId: null, past: [], future: [] });
   },
 
   removeTab: (id: string) => {
@@ -154,7 +161,7 @@ export const useStore = create<StoreState>((set, get) => ({
     if (tabs.length <= 1) return;
     const remaining = tabs.filter((t) => t.id !== id);
     const newActive = get().activeTabId === id ? remaining[0].id : get().activeTabId;
-    set({ tabs: remaining, activeTabId: newActive, selectedNodeId: null, history: [], historyIndex: -1 });
+    set({ tabs: remaining, activeTabId: newActive, selectedNodeId: null, past: [], future: [] });
   },
 
   renameTab: (id: string, name: string) => {
@@ -162,8 +169,10 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   setActiveTab: (id: string) => {
-    set({ activeTabId: id, selectedNodeId: null, history: [], historyIndex: -1 });
+    set({ activeTabId: id, selectedNodeId: null, past: [], future: [] });
   },
+
+  setSandboxOpen: (open: boolean) => set({ sandboxOpen: open }),
 
   // ── Canvas actions ──
   onNodesChange: (changes: NodeChange[]) => {
@@ -179,14 +188,14 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   onConnect: (connection: Connection) => {
-    get().pushHistory();
+    get().saveSnapshot();
     const { tabs, activeTabId } = get();
     const active = getActive(tabs, activeTabId);
     set({ tabs: updateActiveTab(tabs, activeTabId, { edges: addEdge(connection, active.edges) as WorkflowEdge[] }) });
   },
 
   addNode: (node: WorkflowNode) => {
-    get().pushHistory();
+    get().saveSnapshot();
     const { tabs, activeTabId } = get();
     const active = getActive(tabs, activeTabId);
     set({ tabs: updateActiveTab(tabs, activeTabId, { nodes: [...active.nodes, node] }) });
@@ -207,7 +216,7 @@ export const useStore = create<StoreState>((set, get) => ({
   deleteSelectedElements: () => {
     const { tabs, activeTabId, selectedNodeId } = get();
     if (!selectedNodeId) return;
-    get().pushHistory();
+    get().saveSnapshot();
     const active = getActive(tabs, activeTabId);
     set({
       tabs: updateActiveTab(tabs, activeTabId, {
@@ -219,7 +228,7 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   loadSampleWorkflow: () => {
-    get().pushHistory();
+    get().saveSnapshot();
     const { tabs, activeTabId } = get();
     set({
       tabs: updateActiveTab(tabs, activeTabId, { nodes: sampleNodes, edges: sampleEdges }),
@@ -228,7 +237,7 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   autoLayout: () => {
-    get().pushHistory();
+    get().saveSnapshot();
     const { tabs, activeTabId } = get();
     const active = getActive(tabs, activeTabId);
     const layoutedNodes = getAutoLayout(active.nodes, active.edges);
@@ -242,7 +251,7 @@ export const useStore = create<StoreState>((set, get) => ({
     try {
       const parsed = JSON.parse(json);
       if (!parsed.nodes || !Array.isArray(parsed.nodes)) return;
-      get().pushHistory();
+      get().saveSnapshot();
       const { tabs, activeTabId } = get();
       set({
         tabs: updateActiveTab(tabs, activeTabId, {
