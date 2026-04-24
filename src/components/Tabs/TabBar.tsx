@@ -34,7 +34,7 @@ export const TabBar: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center gap-1 px-4 py-1.5 border-b border-[#2a2218] bg-[#1a1410] overflow-x-auto shrink-0">
+    <div className="flex items-center gap-1 px-4 py-1.5 border-b border-slate-200/40 bg-white/30 backdrop-blur-md overflow-x-auto shrink-0">
       {tabs.map((tab) => {
         const isActive = tab.id === activeTabId;
         const isEditing = editingId === tab.id;
@@ -46,8 +46,8 @@ export const TabBar: React.FC = () => {
             className={`
               group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-all shrink-0
               ${isActive
-                ? 'bg-white/10 shadow-sm border border-white/10 text-white/90'
-                : 'text-white/40 hover:text-white/70 hover:bg-white/5'
+                ? 'bg-white/80 shadow-sm border border-slate-200/60 text-slate-800'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-white/40'
               }
             `}
           >
@@ -62,7 +62,7 @@ export const TabBar: React.FC = () => {
                 onChange={(e) => setEditValue(e.target.value)}
                 onBlur={commitRename}
                 onKeyDown={(e) => { if (e.key === 'Enter') commitRename(); if (e.key === 'Escape') setEditingId(null); }}
-                className="bg-transparent border-b border-[#f06422] outline-none text-xs font-semibold text-white/90 w-24 py-0"
+                className="bg-transparent border-b border-[#f06422] outline-none text-xs font-semibold text-slate-800 w-24 py-0"
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
@@ -73,7 +73,7 @@ export const TabBar: React.FC = () => {
             {isActive && !isEditing && (
               <button
                 onClick={(e) => { e.stopPropagation(); startEditing(tab.id, tab.name); }}
-                className="p-0.5 text-white/40 hover:text-[#f06422] transition-colors opacity-0 group-hover:opacity-100"
+                className="p-0.5 text-slate-400 hover:text-[#f06422] transition-colors opacity-0 group-hover:opacity-100"
               >
                 <Pencil size={11} />
               </button>
@@ -81,7 +81,7 @@ export const TabBar: React.FC = () => {
             {isEditing && (
               <button
                 onClick={(e) => { e.stopPropagation(); commitRename(); }}
-                className="p-0.5 text-emerald-400 hover:text-emerald-500 transition-colors"
+                className="p-0.5 text-emerald-600 hover:text-emerald-700 transition-colors"
               >
                 <Check size={12} />
               </button>
@@ -91,7 +91,7 @@ export const TabBar: React.FC = () => {
             {tabs.length > 1 && (
               <button
                 onClick={(e) => { e.stopPropagation(); removeTab(tab.id); }}
-                className="p-0.5 text-white/40 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                className="p-0.5 text-slate-400 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
               >
                 <X size={11} />
               </button>
@@ -103,7 +103,7 @@ export const TabBar: React.FC = () => {
       {/* Add tab button */}
       <button
         onClick={addTab}
-        className="p-1.5 text-white/40 hover:text-[#f06422] hover:bg-white/5 rounded-lg transition-colors shrink-0 ml-1"
+        className="p-1.5 text-slate-400 hover:text-[#f06422] hover:bg-white/50 rounded-lg transition-colors shrink-0 ml-1"
         title="New Workflow"
       >
         <Plus size={14} />
