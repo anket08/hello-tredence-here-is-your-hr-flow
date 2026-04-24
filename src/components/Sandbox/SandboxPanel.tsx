@@ -104,23 +104,23 @@ export const SandboxPanel: React.FC = () => {
   if (!sandboxOpen) return null;
 
   return (
-    <aside className="w-full md:w-[340px] h-[60%] md:h-full glass-panel absolute bottom-0 md:relative flex flex-col z-20 md:z-10 shrink-0 animate-slide-in-right border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none bg-white/95 md:bg-white/70">
+    <aside className="fixed md:relative bottom-0 left-0 right-0 h-[65vh] md:h-full w-full md:w-[340px] glass-panel flex flex-col z-50 md:z-10 shrink-0 animate-slide-up md:animate-none border-t md:border-t-0 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] md:shadow-none transition-colors duration-400 rounded-t-3xl md:rounded-none">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/40 shrink-0">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b shrink-0 transition-colors duration-400" style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)' }}>
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-lg flex items-center justify-center text-white shadow-sm">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white shadow-sm" style={{ background: 'var(--theme-primary)' }}>
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <polyline points="4,17 10,11 4,5" />
               <line x1="12" y1="19" x2="20" y2="19" />
             </svg>
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-800">Sandbox</h2>
-            <span className="text-[9px] text-slate-400 uppercase tracking-widest font-medium">Simulation</span>
+            <h2 className="text-sm font-bold transition-colors duration-400" style={{ color: 'var(--theme-text)' }}>Sandbox</h2>
+            <span className="text-[9px] uppercase tracking-widest font-medium transition-colors duration-400 theme-label">Simulation</span>
           </div>
         </div>
-        <button onClick={() => setSandboxOpen(false)} className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors">
-          <X size={15} />
+        <button onClick={() => setSandboxOpen(false)} className="p-1.5 hover:opacity-70 rounded-lg transition-colors theme-label">
+          <X size={18} />
         </button>
       </div>
 

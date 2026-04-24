@@ -146,11 +146,11 @@ const WorkflowCanvasInner: React.FC = () => {
       >
         <Background gap={20} size={1} color="var(--theme-grid-dot)" />
         <Controls 
-          className="!backdrop-blur-lg !rounded-xl !shadow-lg transition-colors duration-400" 
+          className="!backdrop-blur-lg !rounded-xl !shadow-lg transition-colors duration-400 hidden sm:flex" 
           style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)', fill: 'var(--theme-text)' }}
         />
         <MiniMap
-          className="!shadow-lg !rounded-xl overflow-hidden transition-colors duration-400"
+          className="!shadow-lg !rounded-xl overflow-hidden transition-colors duration-400 hidden md:block"
           style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)', borderWidth: '1px' }}
           maskColor="var(--theme-minimap-mask)"
           nodeColor={(node) => {

@@ -17,6 +17,7 @@ export const PropertiesPanel: React.FC = () => {
   const updateNodeData = useStore((s) => s.updateNodeData);
   const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
   const duplicateNode = useStore((s) => s.duplicateNode);
+  const setSelectedNode = useStore((s) => s.setSelectedNode);
   const [actions, setActions] = useState<AutomatedAction[]>([]);
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
@@ -29,7 +30,7 @@ export const PropertiesPanel: React.FC = () => {
 
   if (!selectedNode) {
     return (
-      <aside className="w-full md:w-72 h-[35%] md:h-full glass-panel flex flex-col justify-center items-center z-20 md:z-10 border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none transition-colors duration-400">
+      <aside className="hidden md:flex w-full md:w-72 h-[35%] md:h-full glass-panel flex-col justify-center items-center z-20 md:z-10 border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none transition-colors duration-400">
         <div className="text-center px-6">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 theme-input transition-colors duration-400">
             <span className="text-xl">🖱️</span>
@@ -73,13 +74,13 @@ export const PropertiesPanel: React.FC = () => {
   const nodeColor = colorMap[type] || '#64748b';
 
   return (
-    <aside className="w-full md:w-72 h-[45%] md:h-full glass-panel flex flex-col z-20 md:z-10 overflow-y-auto border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none transition-colors duration-400">
+    <aside className="fixed md:relative bottom-0 left-0 right-0 h-[65vh] md:h-full w-full md:w-72 glass-panel flex flex-col z-50 md:z-10 overflow-y-auto border-t md:border-t-0 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] md:shadow-none transition-colors duration-400 rounded-t-3xl md:rounded-none animate-slide-up md:animate-none">
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between sticky top-0 backdrop-blur-lg z-10 transition-colors duration-400" style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)' }}>
         <div className="flex items-center gap-2.5">
-          <div className="w-3 h-3 rounded-full" style={{ background: nodeColor }}></div>
-          <div>
-            <h2 className="text-sm font-bold capitalize transition-colors duration-400" style={{ color: 'var(--theme-text)' }}>{type} Node</h2>
+          <div className="w-3 h-3 rounded-full shrink-0" style={{ background: nodeColor }}></div>
+          <div className="min-w-0">
+            <h2 className="text-sm font-bold capitalize transition-colors duration-400 truncate" style={{ color: 'var(--theme-text)' }}>{type} Node</h2>
             <p className="text-[9px] font-mono transition-colors duration-400 theme-label">{selectedNode.id.slice(0, 8)}</p>
           </div>
         </div>
@@ -97,6 +98,13 @@ export const PropertiesPanel: React.FC = () => {
             title="Delete Node"
           >
             <Trash2 size={16} />
+          </button>
+          <button
+            onClick={() => setSelectedNode(null)}
+            className="md:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg ml-1"
+            title="Close Panel"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
       </div>
