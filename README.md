@@ -223,3 +223,5 @@ A manual history stack (`history[]` + `historyIndex`) records snapshots before e
 **[View Live →](https://hr4tredence.netlify.app/)**
 
 </div>
+#   t r e d e n c e - h o s t  
+ 
