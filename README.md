@@ -69,6 +69,7 @@ The platform has been heavily upgraded to simulate a full enterprise-grade exper
 - **Cinematic Auto-Layout**: The `Arrange` feature now perfectly cascades nodes using `dagre` and elegantly animates the canvas (`fitView`) to frame your new architecture perfectly.
 - **Advanced Action Toolbar**: Redesigned top navigation featuring Quick Build, Templates, PNG High-Res Export, JSON I/O, Undo/Redo, and Fullscreen modes.
 - **Clipboard Mechanics**: Seamlessly duplicate nodes across the canvas with native `Ctrl+C` and `Ctrl+V` support.
+- **📱 Fully Mobile Responsive**: Access, view, and simulate your workflows on the go. The entire application (canvas, properties, modals) is meticulously optimized for touch screens and mobile displays.
 
 ### ⚙️ Core Capabilities
 
@@ -98,6 +99,17 @@ The platform has been heavily upgraded to simulate a full enterprise-grade exper
 
 ![Action Toolbar](./docs/toolbar.png)
 *Fully-featured Application Toolbar*
+
+### 📱 Mobile Optimized Experience
+
+The application is fully responsive, ensuring a seamless experience across all devices. The complex React Flow canvas, node property forms, and detailed insight modals fluidly adapt to mobile viewports.
+
+<div align="center">
+  <img src="./docs/mobile-hero.png" width="24%" alt="Mobile Canvas" />
+  <img src="./docs/mobile-templates.png" width="24%" alt="Mobile Templates" />
+  <img src="./docs/mobile-insights.png" width="24%" alt="Mobile Insights" />
+  <img src="./docs/mobile-sandbox.png" width="24%" alt="Mobile Sandbox" />
+</div>
 
 ---
 
