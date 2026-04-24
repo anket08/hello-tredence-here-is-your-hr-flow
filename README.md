@@ -2,14 +2,14 @@
 
 # 🟠 Tredence Studio — HR Workflow Designer
 
-**A glassmorphic, single-page HR Workflow Designer built with React, TypeScript, React Flow & Zustand.**
+**A single-page HR Workflow MVP Designer built with React, TypeScript, React Flow & Zustand.**
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-hr4tredence.netlify.app-f06422?style=for-the-badge)](https://hr4tredence.netlify.app/)
 [![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Tailwind](https://img.shields.io/badge/Tailwind-v4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-*Designed & engineered by **Anket** for the Tredence Analytics AI Agentic Engineering Internship 2025.*
+*Designed & engineered by **Anket** for the Tredence Analytics AI Agentic Engineering Internship 2026.*
 
 </div>
 
