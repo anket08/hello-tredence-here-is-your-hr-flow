@@ -14,15 +14,15 @@ const StopIcon = () => (
 export const EndNode: React.FC<NodeProps<EndWorkflowNode>> = ({ id, data, selected }) => {
   const { getNodeError } = useValidation();
   return (
-    <BaseNode id={id} type="end" title={data.title || 'End'} icon={<StopIcon />} selected={selected} accentColor="#ef4444" accentBg="bg-rose-50/80" validationError={getNodeError(id)}>
+    <BaseNode id={id} type="end" typeLabel="END" title={data.title || 'End'} icon={<StopIcon />} selected={selected} accentColor="#ef4444" validationError={getNodeError(id)}>
       {data.endMessage ? (
-        <p className="text-[11px] text-slate-500 italic">"{data.endMessage}"</p>
+        <p className="text-[10px] text-slate-400 italic">"{data.endMessage}"</p>
       ) : (
-        <span className="text-[11px] text-slate-400 italic">No message</span>
+        <span className="text-[10px] text-slate-400 italic">No message</span>
       )}
       {data.isSummary && (
-        <div className="mt-1.5 text-[10px] font-bold text-rose-600 flex items-center gap-1">
-          📊 Summary Report
+        <div className="mt-1 text-[10px] font-bold text-rose-600 flex items-center gap-1">
+          📊 Summary enabled
         </div>
       )}
     </BaseNode>

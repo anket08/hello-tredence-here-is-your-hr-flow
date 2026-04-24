@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, X, Loader2, Download, RotateCcw, CheckCircle2, XCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Play, X, Loader2, Download, RotateCcw, CheckCircle2, XCircle, Clock, AlertTriangle, ArrowRight } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { simulateWorkflow } from '../../api/mockApi';
 import { useValidation } from '../../hooks/useValidation';
@@ -43,12 +43,14 @@ export const SandboxPanel: React.FC = () => {
   const activeTabId = useStore((s) => s.activeTabId);
   const sandboxOpen = useStore((s) => s.sandboxOpen);
   const setSandboxOpen = useStore((s) => s.setSandboxOpen);
+  const setSelectedNode = useStore((s) => s.setSelectedNode);
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
   const nodes = activeTab.nodes;
   const edges = activeTab.edges;
 
   const { errors } = useValidation();
   const warnings = errors.filter((e) => e.severity === 'warning');
+  const criticalErrors = errors.filter((e) => e.severity === 'error');
 
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState<{ success: boolean; log: string[] } | null>(null);
@@ -78,14 +80,19 @@ export const SandboxPanel: React.FC = () => {
     a.remove();
   };
 
+  const handleClickError = (nodeId: string) => {
+    if (!nodeId) return;
+    // Close sandbox & select the node so properties panel shows it
+    setSandboxOpen(false);
+    setSelectedNode(nodeId);
+  };
+
   const steps = simulationResult ? parseLogToSteps(simulationResult.log, nodes) : [];
 
   if (!sandboxOpen) return null;
 
   return (
-    <aside
-      className="w-[340px] glass-panel h-full flex flex-col z-10 shrink-0 animate-slide-in-right"
-    >
+    <aside className="w-[340px] glass-panel h-full flex flex-col z-10 shrink-0 animate-slide-in-right">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/40 shrink-0">
         <div className="flex items-center gap-2.5">
@@ -107,21 +114,59 @@ export const SandboxPanel: React.FC = () => {
 
       {/* Body */}
       <div className="flex-1 overflow-y-auto p-4">
+        {/* Critical Errors */}
+        {criticalErrors.length > 0 && (
+          <div className="mb-3 p-3 bg-rose-50/80 border border-rose-200/60 rounded-xl animate-fade-in">
+            <div className="flex items-center gap-1.5 mb-2">
+              <XCircle size={13} className="text-rose-600" />
+              <span className="text-[11px] font-bold text-rose-700">Errors</span>
+            </div>
+            {criticalErrors.map((err, i) => (
+              <button
+                key={i}
+                onClick={() => handleClickError(err.nodeId)}
+                className="flex items-center gap-2 w-full text-left px-2 py-1.5 -mx-1 rounded-lg hover:bg-rose-100/60 transition-colors group"
+              >
+                <ArrowRight size={10} className="text-rose-400 group-hover:text-rose-600 transition-colors shrink-0" />
+                <span className="text-[11px] text-rose-700">
+                  <strong>"{err.nodeTitle}"</strong> — {err.message}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Warnings */}
         {warnings.length > 0 && (
-          <div className="mb-4 p-3 bg-amber-50/80 border border-amber-200/60 rounded-xl animate-fade-in">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <AlertTriangle size={12} className="text-amber-600" />
+          <div className="mb-3 p-3 bg-amber-50/80 border border-amber-200/60 rounded-xl animate-fade-in">
+            <div className="flex items-center gap-1.5 mb-2">
+              <AlertTriangle size={13} className="text-amber-600" />
               <span className="text-[11px] font-bold text-amber-700">Warnings</span>
             </div>
             {warnings.map((w, i) => (
-              <p key={i} className="text-[10px] text-amber-700 ml-5 leading-relaxed">• {w.message}</p>
+              <button
+                key={i}
+                onClick={() => handleClickError(w.nodeId)}
+                disabled={!w.nodeId}
+                className={`flex items-center gap-2 w-full text-left px-2 py-1.5 -mx-1 rounded-lg transition-colors group ${
+                  w.nodeId ? 'hover:bg-amber-100/60 cursor-pointer' : 'cursor-default'
+                }`}
+              >
+                {w.nodeId ? (
+                  <ArrowRight size={10} className="text-amber-400 group-hover:text-amber-600 transition-colors shrink-0" />
+                ) : (
+                  <span className="w-2.5 shrink-0" />
+                )}
+                <span className="text-[11px] text-amber-700">
+                  <strong>"{w.nodeTitle}"</strong> — {w.message}
+                </span>
+              </button>
             ))}
           </div>
         )}
 
         {!simulationResult && !isLoading ? (
-          <div className="text-center py-12 animate-fade-in">
+          <div className="text-center py-10 animate-fade-in">
             <div className="w-16 h-16 bg-orange-100/80 text-[#f06422] rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm">
               <Play size={32} fill="currentColor" className="ml-1" />
             </div>
@@ -131,7 +176,7 @@ export const SandboxPanel: React.FC = () => {
             </p>
           </div>
         ) : isLoading ? (
-          <div className="text-center py-12 flex flex-col items-center animate-fade-in">
+          <div className="text-center py-10 flex flex-col items-center animate-fade-in">
             <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-5">
               <Loader2 size={32} className="animate-spin text-[#f06422]" />
             </div>
@@ -140,7 +185,6 @@ export const SandboxPanel: React.FC = () => {
           </div>
         ) : (
           <div className="animate-fade-in">
-            {/* Simulation result header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 {simulationResult?.success ? (
@@ -157,7 +201,6 @@ export const SandboxPanel: React.FC = () => {
               </span>
             </div>
 
-            {/* Step-by-step */}
             <div className="flex flex-col gap-3">
               {steps.map((step, idx) => {
                 const cfg = statusConfig[step.status];

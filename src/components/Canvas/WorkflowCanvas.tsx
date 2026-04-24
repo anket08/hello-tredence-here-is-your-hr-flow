@@ -5,6 +5,7 @@ import {
   Controls,
   MiniMap,
   ReactFlowProvider,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +16,7 @@ import type { NodeType, WorkflowNode } from '../../types/workflow';
 
 const WorkflowCanvasInner: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
@@ -40,19 +42,22 @@ const WorkflowCanvasInner: React.FC = () => {
       const title = event.dataTransfer.getData('application/title');
       if (!type) return;
 
-      const bounds = reactFlowWrapper.current?.getBoundingClientRect();
-      if (!bounds) return;
+      // Convert screen coordinates to flow coordinates (accounts for zoom & pan)
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
 
       const newNode = {
         id: uuidv4(),
         type,
-        position: { x: event.clientX - bounds.left, y: event.clientY - bounds.top },
+        position,
         data: { type, title },
       } as unknown as WorkflowNode;
 
       addNode(newNode);
     },
-    [addNode]
+    [addNode, screenToFlowPosition]
   );
 
   const onSelectionChange = useCallback(({ nodes }: { nodes: any[] }) => {

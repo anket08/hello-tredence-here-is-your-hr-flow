@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, AlertTriangle, Circle } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Circle, XCircle } from 'lucide-react';
 import { useValidation } from '../../hooks/useValidation';
 import { useStore } from '../../store/useStore';
 
@@ -7,16 +7,26 @@ export const StatusBar: React.FC = () => {
   const { errors } = useValidation();
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
+  const setSelectedNode = useStore((s) => s.setSelectedNode);
+  const setSandboxOpen = useStore((s) => s.setSandboxOpen);
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
 
   const errorCount = errors.filter((e) => e.severity === 'error').length;
   const warningCount = errors.filter((e) => e.severity === 'warning').length;
   const isValid = errorCount === 0;
 
+  // Click on first error/warning to jump to it
+  const handleClickError = () => {
+    const firstNodeError = errors.find((e) => e.nodeId);
+    if (firstNodeError) {
+      setSandboxOpen(false);
+      setSelectedNode(firstNodeError.nodeId);
+    }
+  };
+
   return (
     <div className="h-7 glass-strong border-t border-slate-200/40 flex items-center justify-between px-5 text-[11px] font-medium text-slate-500 z-30 shrink-0">
       <div className="flex items-center gap-4">
-        {/* Validation status */}
         <div className="flex items-center gap-1.5">
           {isValid ? (
             <>
@@ -24,18 +34,18 @@ export const StatusBar: React.FC = () => {
               <span className="text-emerald-600">Valid workflow</span>
             </>
           ) : (
-            <>
-              <AlertTriangle size={12} className="text-rose-500" />
+            <button onClick={handleClickError} className="flex items-center gap-1.5 hover:underline">
+              <XCircle size={12} className="text-rose-500" />
               <span className="text-rose-600">{errorCount} error{errorCount !== 1 ? 's' : ''}</span>
-            </>
+            </button>
           )}
         </div>
 
         {warningCount > 0 && (
-          <div className="flex items-center gap-1.5">
+          <button onClick={handleClickError} className="flex items-center gap-1.5 hover:underline">
             <AlertTriangle size={12} className="text-amber-500" />
             <span className="text-amber-600">{warningCount} warning{warningCount !== 1 ? 's' : ''}</span>
-          </div>
+          </button>
         )}
       </div>
 

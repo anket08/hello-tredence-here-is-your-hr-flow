@@ -13,11 +13,11 @@ const BoltIcon = () => (
 export const AutomatedNode: React.FC<NodeProps<AutomatedWorkflowNode>> = ({ id, data, selected }) => {
   const { getNodeError } = useValidation();
   return (
-    <BaseNode id={id} type="automated" title={data.title || 'Automated Step'} icon={<BoltIcon />} selected={selected} accentColor="#8b5cf6" accentBg="bg-violet-50/80" validationError={getNodeError(id)}>
+    <BaseNode id={id} type="automated" typeLabel="AUTOMATED" title={data.title || 'Automated Step'} icon={<BoltIcon />} selected={selected} accentColor="#8b5cf6" validationError={getNodeError(id)}>
       {data.actionId ? (
-        <span className="inline-block text-[11px] bg-violet-100/70 text-violet-700 px-2 py-0.5 rounded-md font-semibold">⚡ {data.actionId}</span>
+        <span className="inline-block text-[10px] bg-violet-100/70 text-violet-700 px-2 py-0.5 rounded-md font-semibold">⚡ {data.actionId}</span>
       ) : (
-        <span className="text-[11px] text-slate-400 italic">No action set</span>
+        <span className="text-[10px] text-slate-400 italic">No action set</span>
       )}
     </BaseNode>
   );

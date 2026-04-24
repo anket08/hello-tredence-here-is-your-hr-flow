@@ -63,9 +63,7 @@ const makeId = () => `tab-${Date.now()}-${tabCounter++}`;
 const defaultTab: WorkflowTab = {
   id: 'tab-main',
   name: 'Main Workflow',
-  nodes: [
-    { id: 'start-1', type: 'start', position: { x: 300, y: 60 }, data: { type: 'start', title: 'Onboarding Start' } },
-  ],
+  nodes: [],
   edges: [],
 };
 
@@ -150,7 +148,7 @@ export const useStore = create<StoreState>((set, get) => ({
     const newTab: WorkflowTab = {
       id,
       name: `Workflow ${get().tabs.length + 1}`,
-      nodes: [{ id: 'start-1', type: 'start', position: { x: 300, y: 60 }, data: { type: 'start', title: 'Start' } }],
+      nodes: [],
       edges: [],
     };
     set({ tabs: [...get().tabs, newTab], activeTabId: id, selectedNodeId: null, past: [], future: [] });

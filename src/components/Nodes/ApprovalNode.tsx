@@ -15,12 +15,10 @@ const ApprovalIcon = () => (
 export const ApprovalNode: React.FC<NodeProps<ApprovalWorkflowNode>> = ({ id, data, selected }) => {
   const { getNodeError } = useValidation();
   return (
-    <BaseNode id={id} type="approval" title={data.title || 'Approval'} icon={<ApprovalIcon />} selected={selected} accentColor="#f59e0b" accentBg="bg-amber-50/80" validationError={getNodeError(id)}>
-      <div className="flex flex-col gap-1">
-        <div className="text-[11px] text-slate-600">Role: <span className="font-bold text-amber-700">👔 {data.approverRole || 'Manager'}</span></div>
-        {data.autoApproveThreshold !== undefined && data.autoApproveThreshold > 0 && (
-          <div className="text-[10px] text-slate-400">⏰ Auto-approve after {data.autoApproveThreshold} days</div>
-        )}
+    <BaseNode id={id} type="approval" typeLabel="APPROVAL" title={data.title || 'Approval'} icon={<ApprovalIcon />} selected={selected} accentColor="#f59e0b" validationError={getNodeError(id)}>
+      <div className="flex items-center gap-1.5">
+        <svg viewBox="0 0 24 24" className="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M5 20c0-3 3-5.5 7-5.5s7 2.5 7 5.5" strokeLinecap="round" /></svg>
+        <span className="text-[11px] text-slate-500">{data.approverRole || 'Manager'}</span>
       </div>
     </BaseNode>
   );
