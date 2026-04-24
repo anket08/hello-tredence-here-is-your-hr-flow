@@ -8,6 +8,7 @@ import { StatusBar } from './components/StatusBar/StatusBar';
 import { TemplateModal } from './components/Templates/TemplateModal';
 import { HelpModal } from './components/HelpModal';
 import { WorkflowInsightsModal } from './components/WorkflowInsightsModal';
+import { ThemeSelector } from './components/ThemeSelector';
 import { useStore } from './store/useStore';
 
 function App() {
@@ -99,7 +100,7 @@ function App() {
       {/* ── Header ── */}
       <header className="min-h-[3rem] md:h-12 glass-strong flex flex-wrap md:flex-nowrap items-center justify-between px-2 md:px-4 py-2 md:py-0 z-30 shrink-0 shadow-sm gap-2">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-orange-200/60">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-md" style={{ backgroundImage: 'linear-gradient(to bottom right, var(--theme-primary), var(--theme-primary-dark))' }}>
             T
           </div>
           <div className="h-6 w-px bg-slate-200/60"></div>
@@ -142,6 +143,11 @@ function App() {
             </svg>
             Quick Build
           </button>
+
+          <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
+
+          {/* Theme Selector */}
+          <ThemeSelector />
 
           {/* Clear */}
           <button onClick={clearCanvas} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50/80 transition-all" title="Clear Canvas">
@@ -245,9 +251,14 @@ function App() {
           onClick={() => setSandboxOpen(!sandboxOpen)}
           className={`group flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
             sandboxOpen
-              ? 'bg-[#f06422] text-white shadow-md shadow-orange-200/50'
-              : 'bg-[#f06422]/10 text-[#d4561d] hover:bg-[#f06422]/20 border border-[#f06422]/20 hover:border-[#f06422]/40'
+              ? 'text-white shadow-md'
+              : 'bg-white/50 hover:bg-white/80 border'
           }`}
+          style={{
+            backgroundColor: sandboxOpen ? 'var(--theme-primary)' : undefined,
+            color: sandboxOpen ? '#fff' : 'var(--theme-primary)',
+            borderColor: sandboxOpen ? 'transparent' : 'var(--theme-primary)'
+          }}
         >
           <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill={sandboxOpen ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="6,3 20,12 6,21" />
@@ -277,7 +288,7 @@ function App() {
         <div className="glass rounded-full px-2 md:px-3 py-0.5 flex items-center gap-1.5 shadow-md">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse shrink-0"></div>
           <span className="text-[9px] md:text-[10px] font-medium text-slate-500 truncate max-w-[200px] md:max-w-none">
-            Built for <span className="text-[#f06422] font-bold">Tredence</span> by <a href="https://aerianket.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-bold hover:text-[#f06422] transition-colors underline decoration-slate-300 hover:decoration-[#f06422] underline-offset-2">Anket</a>
+            Built for <span className="font-bold" style={{ color: 'var(--theme-primary)' }}>Tredence</span> by <a href="https://aerianket.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-bold transition-colors underline underline-offset-2" style={{ textDecorationColor: 'var(--theme-primary)' }}>Anket</a>
           </span>
         </div>
       </div>

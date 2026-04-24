@@ -2,9 +2,57 @@
 
 @theme {
   --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --color-tredence: #f06422;
-  --color-tredence-dark: #d4561d;
-  --color-tredence-light: #fff3ec;
+  --color-tredence: var(--theme-primary);
+  --color-tredence-dark: var(--theme-primary-dark);
+  --color-tredence-light: var(--theme-primary-light);
+}
+
+:root {
+  --theme-bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --theme-primary: #f06422;
+  --theme-primary-dark: #d4561d;
+  --theme-primary-light: #fff3ec;
+  --theme-text: #0f172a;
+}
+
+[data-theme="ocean"] {
+  --theme-bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+  --theme-primary: #0284c7;
+  --theme-primary-dark: #0369a1;
+  --theme-primary-light: #f0f9ff;
+  --theme-text: #0f172a;
+}
+
+[data-theme="midnight"] {
+  --theme-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --theme-primary: #8b5cf6;
+  --theme-primary-dark: #7c3aed;
+  --theme-primary-light: #f5f3ff;
+  --theme-text: #f8fafc;
+}
+
+[data-theme="forest"] {
+  --theme-bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce3 50%, #bbf7d0 100%);
+  --theme-primary: #16a34a;
+  --theme-primary-dark: #15803d;
+  --theme-primary-light: #f0fdf4;
+  --theme-text: #0f172a;
+}
+
+[data-theme="sunset"] {
+  --theme-bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 50%, #fecdd3 100%);
+  --theme-primary: #e11d48;
+  --theme-primary-dark: #be123c;
+  --theme-primary-light: #fff1f2;
+  --theme-text: #0f172a;
+}
+
+[data-theme="cyberpunk"] {
+  --theme-bg-gradient: linear-gradient(135deg, #18181b 0%, #27272a 50%, #3f3f46 100%);
+  --theme-primary: #facc15;
+  --theme-primary-dark: #eab308;
+  --theme-primary-light: #fefce8;
+  --theme-text: #f8fafc;
 }
 
 /* Custom scrollbar */
@@ -37,8 +85,9 @@ html, body, #root {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-  color: #0f172a;
+  background: var(--theme-bg-gradient);
+  color: var(--theme-text);
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* Glassmorphism utility classes */
@@ -72,7 +121,7 @@ html, body, #root {
 
 /* Node glow effect on selection */
 .node-glow {
-  box-shadow: 0 0 0 2px rgba(240, 100, 34, 0.25), 0 8px 32px -8px rgba(240, 100, 34, 0.18);
+  box-shadow: 0 0 0 2px var(--theme-primary), 0 8px 32px -8px var(--theme-primary);
 }
 
 /* Smooth edge animation */
@@ -81,7 +130,7 @@ html, body, #root {
   stroke-width: 2 !important;
 }
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: #f06422 !important;
+  stroke: var(--theme-primary) !important;
   stroke-width: 2.5 !important;
 }
 
@@ -185,9 +234,9 @@ html, body, #root {
 
 /* ── Template card hover glow ── */
 @keyframes template-glow {
-  0% { box-shadow: 0 0 0 0 rgba(240, 100, 34, 0); }
-  50% { box-shadow: 0 0 20px 2px rgba(240, 100, 34, 0.08); }
-  100% { box-shadow: 0 0 0 0 rgba(240, 100, 34, 0); }
+  0% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 20px 2px var(--theme-primary); }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 /* ── Sandbox slide-in animation ── */

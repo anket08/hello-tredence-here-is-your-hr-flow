@@ -29,6 +29,10 @@ export interface StoreState {
   selectedNodeId: string | null;
   sandboxOpen: boolean;
   showTemplates: boolean;
+  // Theme state
+  theme: string;
+  setTheme: (theme: string) => void;
+  
   triggerFitView: number;
   downloadPngFn: (() => void) | null;
   clipboard: WorkflowNode | null;
@@ -108,6 +112,11 @@ export const useStore = create<StoreState>((set, get) => ({
   selectedNodeId: null,
   sandboxOpen: false,
   showTemplates: false,
+  theme: 'default',
+  setTheme: (theme) => {
+    set({ theme });
+    document.documentElement.setAttribute('data-theme', theme);
+  },
   triggerFitView: 0,
   downloadPngFn: null,
   clipboard: null,
