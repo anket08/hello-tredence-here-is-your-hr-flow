@@ -146,9 +146,6 @@ function App() {
 
           <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
 
-          {/* Theme Selector */}
-          <ThemeSelector />
-
           {/* Clear */}
           <button onClick={clearCanvas} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50/80 transition-all" title="Clear Canvas">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -247,24 +244,28 @@ function App() {
         </div>
 
         {/* Right side — Test Workflow button */}
-        <button
-          onClick={() => setSandboxOpen(!sandboxOpen)}
-          className={`group flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-            sandboxOpen
-              ? 'text-white shadow-md'
-              : 'bg-white/50 hover:bg-white/80 border'
-          }`}
-          style={{
-            backgroundColor: sandboxOpen ? 'var(--theme-primary)' : undefined,
-            color: sandboxOpen ? '#fff' : 'var(--theme-primary)',
-            borderColor: sandboxOpen ? 'transparent' : 'var(--theme-primary)'
-          }}
-        >
-          <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill={sandboxOpen ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="6,3 20,12 6,21" />
-          </svg>
-          {sandboxOpen ? 'Close Sandbox' : 'Test Workflow'}
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <ThemeSelector />
+          <button
+            onClick={() => setSandboxOpen(!sandboxOpen)}
+            className={`group flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              sandboxOpen
+                ? 'text-white shadow-md'
+                : 'bg-white/50 hover:bg-white/80 border'
+            }`}
+            style={{
+              backgroundColor: sandboxOpen ? 'var(--theme-primary)' : undefined,
+              color: sandboxOpen ? '#fff' : 'var(--theme-primary)',
+              borderColor: sandboxOpen ? 'transparent' : 'var(--theme-primary)'
+            }}
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill={sandboxOpen ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="6,3 20,12 6,21" />
+            </svg>
+            <span className="hidden sm:inline">{sandboxOpen ? 'Close Sandbox' : 'Test Workflow'}</span>
+            <span className="sm:hidden">{sandboxOpen ? 'Close' : 'Test'}</span>
+          </button>
+        </div>
       </header>
 
       {/* ── Tab Bar ── */}

@@ -40,7 +40,7 @@ export function ThemeSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 w-48 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-slate-200/60 overflow-hidden z-50 animate-fade-in">
+        <div className="absolute top-full mt-2 right-0 w-48 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-slate-200/60 overflow-hidden z-50 animate-fade-in">
           <div className="p-1.5 flex flex-col gap-0.5">
             {THEMES.map((t) => (
               <button
