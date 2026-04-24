@@ -81,6 +81,9 @@ const WorkflowCanvasInner: React.FC = () => {
         onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
         fitView
+        fitViewOptions={{ maxZoom: 1.2 }}
+        minZoom={0.3}
+        maxZoom={2}
         deleteKeyCode={["Backspace", "Delete"]}
         style={{ background: 'transparent' }}
       >
@@ -101,6 +104,24 @@ const WorkflowCanvasInner: React.FC = () => {
           }}
         />
       </ReactFlow>
+
+      {/* Empty State Overlay */}
+      {nodes.length === 0 && (
+        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center z-10">
+          <div className="bg-white/60 backdrop-blur-md px-8 py-6 rounded-2xl border border-slate-200/60 shadow-xl flex flex-col items-center text-center animate-fade-in">
+            <div className="w-16 h-16 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-orange-200/50">
+              <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v18" />
+                <path d="M3 12h18" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">START BUILDING</h2>
+            <p className="text-sm font-medium text-slate-500 mt-2 max-w-[240px]">
+              Drag and drop a node from the left sidebar onto the canvas to begin.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

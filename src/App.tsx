@@ -174,11 +174,11 @@ function App() {
       <StatusBar />
 
       {/* ── Signature ── */}
-      <div className="fixed bottom-9 left-3 z-50 pointer-events-none">
+      <div className="fixed bottom-9 left-3 z-50">
         <div className="glass rounded-full px-3 py-0.5 flex items-center gap-1.5 shadow-md">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse"></div>
           <span className="text-[10px] font-medium text-slate-500">
-            Built for <span className="text-[#f06422] font-bold">Tredence</span> by <span className="text-slate-700 font-bold">Anket</span>
+            Built for <span className="text-[#f06422] font-bold">Tredence</span> by <a href="https://aerianket.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-bold hover:text-[#f06422] transition-colors underline decoration-slate-300 hover:decoration-[#f06422] underline-offset-2">Anket</a>
           </span>
         </div>
       </div>
