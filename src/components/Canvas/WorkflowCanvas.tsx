@@ -1,32 +1,27 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import {
   ReactFlow,
   Background,
   Controls,
   MiniMap,
-  ReactFlowProvider,
+  Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { v4 as uuidv4 } from 'uuid';
-
-import { useStore } from '../../store/useStore';
 import { nodeTypes } from '../Nodes';
-import type { NodeType, WorkflowNode } from '../../types/workflow';
+import { useStore } from '../../store/useStore';
 
-const WorkflowCanvasInner: React.FC = () => {
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
-
+export const WorkflowCanvas: React.FC = () => {
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
   const nodes = activeTab.nodes;
   const edges = activeTab.edges;
+
   const onNodesChange = useStore((s) => s.onNodesChange);
   const onEdgesChange = useStore((s) => s.onEdgesChange);
   const onConnect = useStore((s) => s.onConnect);
-  const addNode = useStore((s) => s.addNode);
   const setSelectedNode = useStore((s) => s.setSelectedNode);
-  const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
+  const addNode = useStore((s) => s.addNode);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -36,72 +31,65 @@ const WorkflowCanvasInner: React.FC = () => {
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
-      const type = event.dataTransfer.getData('application/reactflow') as NodeType;
+      const type = event.dataTransfer.getData('application/reactflow');
       const title = event.dataTransfer.getData('application/title');
+
       if (!type) return;
 
-      const bounds = reactFlowWrapper.current?.getBoundingClientRect();
-      if (!bounds) return;
-
+      const position = { x: event.clientX - 250, y: event.clientY - 60 };
       const newNode = {
-        id: uuidv4(),
+        id: `${type}-${Date.now()}`,
         type,
-        position: { x: event.clientX - bounds.left, y: event.clientY - bounds.top },
+        position,
         data: { type, title },
-      } as unknown as WorkflowNode;
+      } as any; // Cast to any to bypass strict discriminated union checking when dropping
 
       addNode(newNode);
     },
     [addNode]
   );
 
-  const onSelectionChange = useCallback(({ nodes }: { nodes: any[] }) => {
-    setSelectedNode(nodes.length === 1 ? nodes[0].id : null);
-  }, [setSelectedNode]);
-
-  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Delete' || event.key === 'Backspace') deleteSelectedElements();
-  }, [deleteSelectedElements]);
-
   return (
-    <div className="flex-1 h-full w-full relative" ref={reactFlowWrapper} onKeyDown={onKeyDown} tabIndex={0}>
+    <div className="w-full h-full relative" onDrop={onDrop} onDragOver={onDragOver}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onSelectionChange={onSelectionChange}
+        onSelectionChange={(params) => {
+          setSelectedNode(params.nodes[0]?.id || null);
+        }}
         nodeTypes={nodeTypes}
         fitView
-        deleteKeyCode={["Backspace", "Delete"]}
-        style={{ background: 'transparent' }}
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.2}
+        className="bg-transparent"
       >
-        <Background gap={20} size={1} color="#cbd5e1" />
-        <Controls className="!bg-white/80 !backdrop-blur-lg !border-slate-200/60 !rounded-xl !shadow-lg" />
+        <Background color="#4a3c2f" gap={24} size={2} className="opacity-40" />
+        <Controls
+          className="!bg-[#1a1410]/80 !border-white/10 !backdrop-blur-md fill-white text-white shadow-lg"
+          position="bottom-left"
+          style={{ marginBottom: '40px', fill: 'white' }}
+        />
         <MiniMap
-          className="!border-slate-200/60 !shadow-lg !rounded-xl overflow-hidden"
-          style={{ background: 'rgba(255,255,255,0.8)' }}
-          nodeColor={(node) => {
-            switch (node.type) {
+          className="!bg-[#1a1410]/80 !border !border-white/10 !backdrop-blur-md rounded-xl overflow-hidden shadow-lg"
+          nodeColor={(n) => {
+            switch (n.type) {
               case 'start': return '#10b981';
               case 'task': return '#3b82f6';
               case 'approval': return '#f59e0b';
               case 'automated': return '#8b5cf6';
               case 'end': return '#ef4444';
-              default: return '#cbd5e1';
+              default: return '#332920';
             }
           }}
+          maskColor="rgba(0,0,0,0.6)"
         />
+        <Panel position="top-right" className="bg-[#1a1410]/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/5 text-[10px] font-medium text-white/50 tracking-widest uppercase">
+          Tredence Engine Active
+        </Panel>
       </ReactFlow>
     </div>
   );
 };
-
-export const WorkflowCanvas: React.FC = () => (
-  <ReactFlowProvider>
-    <WorkflowCanvasInner />
-  </ReactFlowProvider>
-);

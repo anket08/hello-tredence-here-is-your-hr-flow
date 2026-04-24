@@ -124,11 +124,11 @@ function App() {
       </main>
 
       {/* ── Signature ── */}
-      <div className="fixed bottom-3 left-3 z-50 pointer-events-none">
-        <div className="glass rounded-full px-3.5 py-1 flex items-center gap-2 shadow-lg">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse"></div>
-          <span className="text-[11px] font-medium text-slate-500">
-            Built for <span className="text-[#f06422] font-bold">Tredence</span> by <span className="text-slate-700 font-bold">Anket</span>
+      <div className="fixed bottom-3 left-3 z-50">
+        <div className="glass rounded-full px-3.5 py-1 flex items-center gap-2 shadow-lg border border-white/5">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#f06422] animate-soft-pulse"></div>
+          <span className="text-[11px] font-medium text-white/50">
+            Built for <a href="https://www.tredence.com/" target="_blank" rel="noreferrer" className="text-[#f06422] font-bold hover:underline">Tredence</a> by <a href="https://aerianket.netlify.app/" target="_blank" rel="noreferrer" className="text-white/80 font-bold hover:underline">Anket</a>
           </span>
         </div>
       </div>
