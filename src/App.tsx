@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { WorkflowCanvas } from './components/Canvas/WorkflowCanvas';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { PropertiesPanel } from './components/Properties/PropertiesPanel';
@@ -6,6 +6,8 @@ import { SandboxPanel } from './components/Sandbox/SandboxPanel';
 import { TabBar } from './components/Tabs/TabBar';
 import { StatusBar } from './components/StatusBar/StatusBar';
 import { TemplateModal } from './components/Templates/TemplateModal';
+import { HelpModal } from './components/HelpModal';
+import { WorkflowInsightsModal } from './components/WorkflowInsightsModal';
 import { useStore } from './store/useStore';
 
 function App() {
@@ -21,10 +23,34 @@ function App() {
   const sandboxOpen = useStore((s) => s.sandboxOpen);
   const setSandboxOpen = useStore((s) => s.setSandboxOpen);
   const downloadPngFn = useStore((s) => s.downloadPngFn);
+  const clearCanvas = useStore((s) => s.clearCanvas);
+  const duplicateNode = useStore((s) => s.duplicateNode);
+  const copySelectedNode = useStore((s) => s.copySelectedNode);
+  const pasteNode = useStore((s) => s.pasteNode);
+  const showTemplates = useStore((s) => s.showTemplates);
+  const setShowTemplates = useStore((s) => s.setShowTemplates);
 
-  const [showTemplates, setShowTemplates] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(console.error);
+    } else {
+      document.exitFullscreen().catch(console.error);
+    }
+  };
 
   const canUndo = past.length > 0;
   const canRedo = future.length > 0;
@@ -58,12 +84,17 @@ function App() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
     if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); duplicateNode(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c') { e.preventDefault(); copySelectedNode(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'v') { e.preventDefault(); pasteNode(); }
   };
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden font-sans" onKeyDown={handleKeyDown} tabIndex={-1}>
       <input ref={fileInputRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
       <TemplateModal isOpen={showTemplates} onClose={() => setShowTemplates(false)} />
+      <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
+      <WorkflowInsightsModal isOpen={showInsights} onClose={() => setShowInsights(false)} />
 
       {/* ── Header ── */}
       <header className="min-h-[3rem] md:h-12 glass-strong flex flex-wrap md:flex-nowrap items-center justify-between px-2 md:px-4 py-2 md:py-0 z-30 shrink-0 shadow-sm gap-2">
@@ -105,12 +136,21 @@ function App() {
             Arrange
           </button>
 
-          {/* Quick Build */}
           <button onClick={loadSampleWorkflow} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-[#f06422] hover:bg-orange-50/80 transition-all" title="Load sample workflow">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="13,2 3,14 12,14 11,22 21,10 12,10" />
             </svg>
             Quick Build
+          </button>
+
+          {/* Clear */}
+          <button onClick={clearCanvas} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50/80 transition-all" title="Clear Canvas">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+            Clear
           </button>
 
           {/* Templates */}
@@ -121,6 +161,50 @@ function App() {
               <line x1="9" y1="9" x2="9" y2="21" />
             </svg>
             Templates
+          </button>
+
+          {/* Insights */}
+          <button onClick={() => setShowInsights(true)} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-fuchsia-700 hover:bg-fuchsia-50/80 transition-all" title="Workflow Insights & Analytics">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <rect x="3" y="14" width="4" height="7" rx="1" />
+              <rect x="10" y="8" width="4" height="13" rx="1" />
+              <rect x="17" y="3" width="4" height="18" rx="1" />
+            </svg>
+            Insights
+          </button>
+
+          {/* Help Button */}
+          <button onClick={() => setShowHelp(true)} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-purple-700 hover:bg-purple-50/80 transition-all" title="Keyboard Shortcuts & Help">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Help
+          </button>
+
+          <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
+
+          {/* Fullscreen Toggle */}
+          <button onClick={toggleFullscreen} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-indigo-700 hover:bg-indigo-50/80 transition-all" title="Toggle Fullscreen">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {isFullscreen ? (
+                <>
+                  <polyline points="8 3 8 8 3 8" />
+                  <polyline points="16 3 16 8 21 8" />
+                  <polyline points="8 21 8 16 3 16" />
+                  <polyline points="16 21 16 16 21 16" />
+                </>
+              ) : (
+                <>
+                  <polyline points="15 3 21 3 21 9" />
+                  <polyline points="9 21 3 21 3 15" />
+                  <line x1="21" y1="3" x2="14" y2="10" />
+                  <line x1="3" y1="21" x2="10" y2="14" />
+                </>
+              )}
+            </svg>
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           </button>
 
           <div className="w-px h-5 bg-slate-300/40 mx-1"></div>

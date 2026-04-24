@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, X, Loader2, Download, RotateCcw, CheckCircle2, XCircle, Clock, AlertTriangle, ArrowRight } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { simulateWorkflow } from '../../api/mockApi';
@@ -71,6 +71,14 @@ export const SandboxPanel: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (criticalErrors.length === 0) {
+      handleSimulate();
+    } else {
+      setSimulationResult({ success: false, log: ['[System] Workflow cannot run due to validation errors. Please fix errors first.'] });
+    }
+  }, []);
 
   const handleReset = () => setSimulationResult(null);
 

@@ -19,7 +19,7 @@ import type { NodeType, WorkflowNode } from '../../types/workflow';
 
 const WorkflowCanvasInner: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { screenToFlowPosition, getNodes } = useReactFlow();
+  const { screenToFlowPosition, getNodes, fitView } = useReactFlow();
 
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
@@ -33,6 +33,16 @@ const WorkflowCanvasInner: React.FC = () => {
   const setSelectedNode = useStore((s) => s.setSelectedNode);
   const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
   const setDownloadPngFn = useStore((s) => s.setDownloadPngFn);
+  const setShowTemplates = useStore((s) => s.setShowTemplates);
+  const triggerFitView = useStore((s) => s.triggerFitView);
+
+  React.useEffect(() => {
+    if (triggerFitView > 0) {
+      setTimeout(() => {
+        fitView({ padding: 0.3, duration: 800, maxZoom: 1 });
+      }, 50);
+    }
+  }, [triggerFitView, fitView]);
 
   React.useEffect(() => {
     setDownloadPngFn(() => {
@@ -124,11 +134,13 @@ const WorkflowCanvasInner: React.FC = () => {
         onDragOver={onDragOver}
         onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
-        defaultEdgeOptions={{ style: { stroke: '#94a3b8', strokeWidth: 2 }, type: 'smoothstep' }}
+        defaultEdgeOptions={{ style: { stroke: '#f06422', strokeWidth: 2.5 }, type: 'smoothstep', animated: true }}
         fitView
         fitViewOptions={{ maxZoom: 1.2 }}
         minZoom={0.3}
         maxZoom={2}
+        snapToGrid={true}
+        snapGrid={[20, 20]}
         deleteKeyCode={["Backspace", "Delete"]}
         style={{ background: 'transparent' }}
       >
@@ -154,15 +166,15 @@ const WorkflowCanvasInner: React.FC = () => {
       {nodes.length === 0 && (
         <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center z-10">
           <div className="bg-white/60 backdrop-blur-md px-8 py-6 rounded-2xl border border-slate-200/60 shadow-xl flex flex-col items-center text-center animate-fade-in">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-orange-200/50">
-              <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v18" />
-                <path d="M3 12h18" />
-              </svg>
-            </div>
+            <button
+              onClick={() => setShowTemplates(true)}
+              className="px-6 py-2.5 bg-gradient-to-br from-[#f06422] to-[#e8530e] hover:opacity-90 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-orange-200/50 pointer-events-auto transition-all transform hover:-translate-y-0.5 active:translate-y-0 font-bold"
+            >
+              Use Template
+            </button>
             <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">START BUILDING</h2>
-            <p className="text-sm font-medium text-slate-500 mt-2 max-w-[240px]">
-              Drag and drop a node from the left sidebar onto the canvas to begin.
+            <p className="text-sm font-medium text-slate-500 mt-2 max-w-[320px] leading-relaxed">
+              Start by dragging a node from the left sidebar, or choose from our 40+ real-world templates with fuzzy matching.
             </p>
           </div>
         </div>

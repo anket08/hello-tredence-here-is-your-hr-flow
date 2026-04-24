@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { fetchAutomations } from '../../api/mockApi';
 import type { AutomatedAction } from '../../api/mockApi';
-import { Trash2, History, Save, RotateCcw } from 'lucide-react';
+import { Trash2, History, Save, RotateCcw, Copy } from 'lucide-react';
 import type { NodeHistoryEntry } from '../../types/workflow';
 
 const inputClass = "w-full border border-slate-200/80 bg-white/60 hover:bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#f06422] focus:ring-2 focus:ring-[#f06422]/15 transition-all text-slate-700";
@@ -16,6 +16,7 @@ export const PropertiesPanel: React.FC = () => {
   const selectedNodeId = useStore((s) => s.selectedNodeId);
   const updateNodeData = useStore((s) => s.updateNodeData);
   const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
+  const duplicateNode = useStore((s) => s.duplicateNode);
   const [actions, setActions] = useState<AutomatedAction[]>([]);
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
@@ -82,13 +83,22 @@ export const PropertiesPanel: React.FC = () => {
             <p className="text-[9px] font-mono text-slate-400">{selectedNode.id.slice(0, 8)}</p>
           </div>
         </div>
-        <button
-          onClick={deleteSelectedElements}
-          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-          title="Delete Node"
-        >
-          <Trash2 size={16} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={duplicateNode}
+            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="Duplicate Node"
+          >
+            <Copy size={16} />
+          </button>
+          <button
+            onClick={deleteSelectedElements}
+            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+            title="Delete Node"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
 
       {/* Fields */}

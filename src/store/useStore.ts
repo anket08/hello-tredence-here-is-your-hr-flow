@@ -28,7 +28,10 @@ export interface StoreState {
   activeTabId: string;
   selectedNodeId: string | null;
   sandboxOpen: boolean;
+  showTemplates: boolean;
+  triggerFitView: number;
   downloadPngFn: (() => void) | null;
+  clipboard: WorkflowNode | null;
 
   // Undo / Redo (past/future stacks)
   past: Snapshot[];
@@ -55,7 +58,12 @@ export interface StoreState {
   autoLayout: () => void;
   importWorkflow: (json: string) => void;
   setSandboxOpen: (open: boolean) => void;
+  setShowTemplates: (show: boolean) => void;
   setDownloadPngFn: (fn: () => void) => void;
+  clearCanvas: () => void;
+  duplicateNode: () => void;
+  copySelectedNode: () => void;
+  pasteNode: () => void;
 }
 
 // ─── Helpers ───
@@ -77,10 +85,10 @@ const sampleNodes: WorkflowNode[] = [
   { id: 'end-1', type: 'end', position: { x: 300, y: 620 }, data: { type: 'end', title: 'Process Complete', endMessage: 'Onboarding finished successfully.', isSummary: true } },
 ];
 const sampleEdges: WorkflowEdge[] = [
-  { id: 'e1-2', source: 'start-1', target: 'task-1' },
-  { id: 'e2-3', source: 'task-1', target: 'approval-1' },
-  { id: 'e3-4', source: 'approval-1', target: 'auto-1' },
-  { id: 'e4-5', source: 'auto-1', target: 'end-1' },
+  { id: 'e1-2', source: 'start-1', target: 'task-1', animated: true },
+  { id: 'e2-3', source: 'task-1', target: 'approval-1', animated: true },
+  { id: 'e3-4', source: 'approval-1', target: 'auto-1', animated: true },
+  { id: 'e4-5', source: 'auto-1', target: 'end-1', animated: true },
 ];
 
 function updateActiveTab(tabs: WorkflowTab[], activeTabId: string, patch: Partial<WorkflowTab>): WorkflowTab[] {
@@ -99,7 +107,10 @@ export const useStore = create<StoreState>((set, get) => ({
   activeTabId: defaultTab.id,
   selectedNodeId: null,
   sandboxOpen: false,
+  showTemplates: false,
+  triggerFitView: 0,
   downloadPngFn: null,
+  clipboard: null,
   past: [],
   future: [],
 
@@ -175,6 +186,8 @@ export const useStore = create<StoreState>((set, get) => ({
 
   setSandboxOpen: (open: boolean) => set({ sandboxOpen: open }),
 
+  setShowTemplates: (show: boolean) => set({ showTemplates: show }),
+
   setDownloadPngFn: (fn: () => void) => set({ downloadPngFn: fn }),
 
   // ── Canvas actions ──
@@ -194,7 +207,7 @@ export const useStore = create<StoreState>((set, get) => ({
     get().saveSnapshot();
     const { tabs, activeTabId } = get();
     const active = getActive(tabs, activeTabId);
-    set({ tabs: updateActiveTab(tabs, activeTabId, { edges: addEdge(connection, active.edges) as WorkflowEdge[] }) });
+    set({ tabs: updateActiveTab(tabs, activeTabId, { edges: addEdge({ ...connection, animated: true }, active.edges) as WorkflowEdge[] }) });
   },
 
   addNode: (node: WorkflowNode) => {
@@ -232,21 +245,90 @@ export const useStore = create<StoreState>((set, get) => ({
 
   loadSampleWorkflow: () => {
     get().saveSnapshot();
-    const { tabs, activeTabId } = get();
+    const { tabs, activeTabId, triggerFitView } = get();
     set({
       tabs: updateActiveTab(tabs, activeTabId, { nodes: sampleNodes, edges: sampleEdges }),
       selectedNodeId: null,
+      triggerFitView: triggerFitView + 1,
+    });
+  },
+
+  clearCanvas: () => {
+    get().saveSnapshot();
+    const { tabs, activeTabId } = get();
+    set({
+      tabs: updateActiveTab(tabs, activeTabId, { nodes: [], edges: [] }),
+      selectedNodeId: null,
+    });
+  },
+
+  duplicateNode: () => {
+    const { tabs, activeTabId, selectedNodeId } = get();
+    if (!selectedNodeId) return;
+    
+    const active = getActive(tabs, activeTabId);
+    const nodeToDuplicate = active.nodes.find(n => n.id === selectedNodeId);
+    
+    if (nodeToDuplicate) {
+      get().saveSnapshot();
+      const newNode = {
+        ...nodeToDuplicate,
+        id: `${nodeToDuplicate.type}-${Date.now()}`,
+        position: {
+          x: nodeToDuplicate.position.x + 50,
+          y: nodeToDuplicate.position.y + 50,
+        },
+        selected: false,
+      };
+      
+      set({
+        tabs: updateActiveTab(tabs, activeTabId, { nodes: [...active.nodes, newNode as WorkflowNode] })
+      });
+    }
+  },
+
+  copySelectedNode: () => {
+    const { tabs, activeTabId, selectedNodeId } = get();
+    if (!selectedNodeId) return;
+    
+    const active = getActive(tabs, activeTabId);
+    const nodeToCopy = active.nodes.find(n => n.id === selectedNodeId);
+    if (nodeToCopy) {
+      set({ clipboard: nodeToCopy });
+    }
+  },
+
+  pasteNode: () => {
+    const { clipboard, tabs, activeTabId } = get();
+    if (!clipboard) return;
+
+    get().saveSnapshot();
+    const active = getActive(tabs, activeTabId);
+    const newNode = {
+      ...clipboard,
+      id: `${clipboard.type}-${Date.now()}`,
+      position: {
+        x: clipboard.position.x + 50,
+        y: clipboard.position.y + 50,
+      },
+      selected: false,
+    };
+
+    set({
+      tabs: updateActiveTab(tabs, activeTabId, { nodes: [...active.nodes, newNode as WorkflowNode] }),
+      selectedNodeId: newNode.id
     });
   },
 
   autoLayout: () => {
     get().saveSnapshot();
-    const { tabs, activeTabId } = get();
+    const { tabs, activeTabId, triggerFitView } = get();
     const active = getActive(tabs, activeTabId);
     const layoutedNodes = getAutoLayout(active.nodes, active.edges);
     set({
       tabs: updateActiveTab(tabs, activeTabId, { nodes: layoutedNodes }),
       selectedNodeId: null,
+      triggerFitView: triggerFitView + 1,
     });
   },
 

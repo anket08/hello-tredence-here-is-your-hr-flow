@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
-import { LayoutTemplate, X } from 'lucide-react';
+import { LayoutTemplate, X, Search } from 'lucide-react';
 import { workflowTemplates } from '../../data/templates';
 import { useStore } from '../../store/useStore';
 
 export const TemplateModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const { importWorkflow, autoLayout } = useStore();
 
   if (!isOpen) return null;
+
+  const fuzzyMatch = (str: string, query: string) => {
+    if (!query) return true;
+    const q = query.toLowerCase().split('').join('.*');
+    return new RegExp(q).test(str.toLowerCase());
+  };
+
+  const filteredTemplates = workflowTemplates.filter(t => 
+    fuzzyMatch(t.name, searchQuery) || fuzzyMatch(t.description, searchQuery)
+  );
 
   const handleSelect = (templateId: string) => {
     const template = workflowTemplates.find((t) => t.id === templateId);
@@ -39,9 +50,28 @@ export const TemplateModal: React.FC<{ isOpen: boolean; onClose: () => void }> =
           </button>
         </div>
 
+        {/* Search Bar */}
+        <div className="px-6 py-3 border-b border-slate-200/40 bg-slate-50/50">
+          <div className="relative">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search templates (e.g. 'onb', 'lev')..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#f06422] focus:ring-1 focus:ring-[#f06422] transition-all"
+            />
+          </div>
+        </div>
+
         {/* Templates List */}
-        <div className="p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
-          {workflowTemplates.map((template) => (
+        <div className="p-4 flex flex-col gap-2 max-h-[50vh] overflow-y-auto scroll-smooth">
+          {filteredTemplates.length === 0 ? (
+            <div className="text-center py-8 text-slate-400 text-sm">
+              No templates found matching "{searchQuery}"
+            </div>
+          ) : (
+            filteredTemplates.map((template) => (
             <button
               key={template.id}
               onClick={() => handleSelect(template.id)}
@@ -68,8 +98,9 @@ export const TemplateModal: React.FC<{ isOpen: boolean; onClose: () => void }> =
               }`}>
                 Use
               </div>
-            </button>
-          ))}
+              </button>
+            ))
+          )}
         </div>
       </div>
     </div>
