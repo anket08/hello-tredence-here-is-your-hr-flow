@@ -2,13 +2,22 @@ import type { Node, Edge } from '@xyflow/react';
 
 export type NodeType = 'start' | 'task' | 'approval' | 'automated' | 'end';
 
-export interface StartNodeData extends Record<string, unknown> {
+export interface NodeHistoryEntry {
+  timestamp: number;
+  data: Record<string, any>;
+}
+
+export interface BaseNodeData extends Record<string, unknown> {
+  history?: NodeHistoryEntry[];
+}
+
+export interface StartNodeData extends BaseNodeData {
   type: 'start';
   title: string;
   metadata?: Record<string, string>;
 }
 
-export interface TaskNodeData extends Record<string, unknown> {
+export interface TaskNodeData extends BaseNodeData {
   type: 'task';
   title: string;
   description?: string;
@@ -17,21 +26,21 @@ export interface TaskNodeData extends Record<string, unknown> {
   customFields?: Record<string, string>;
 }
 
-export interface ApprovalNodeData extends Record<string, unknown> {
+export interface ApprovalNodeData extends BaseNodeData {
   type: 'approval';
   title: string;
   approverRole?: string;
   autoApproveThreshold?: number;
 }
 
-export interface AutomatedStepNodeData extends Record<string, unknown> {
+export interface AutomatedStepNodeData extends BaseNodeData {
   type: 'automated';
   title: string;
   actionId?: string;
   actionParams?: Record<string, string>;
 }
 
-export interface EndNodeData extends Record<string, unknown> {
+export interface EndNodeData extends BaseNodeData {
   type: 'end';
   title?: string;
   endMessage?: string;

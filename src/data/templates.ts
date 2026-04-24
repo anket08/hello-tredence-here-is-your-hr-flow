@@ -17,7 +17,7 @@ export const workflowTemplates: WorkflowTemplate[] = [
     icon: '👋',
     nodes: [
       { id: 's1', type: 'start', position: { x: 300, y: 40 }, data: { type: 'start', title: 'New Hire Initiated' } },
-      { id: 't1', type: 'task', position: { x: 300, y: 160 }, data: { type: 'task', title: 'Collect Documents', assignee: 'HR Coordinator', description: 'Collect ID proof, address proof, tax forms, and signed offer letter.' } },
+      { id: 't1', type: 'task', position: { x: 300, y: 160 }, data: { type: 'task', title: 'Collect Documents', assignee: '-ANKET AERI', description: 'Collect ID proof, address proof, tax forms, and signed offer letter.' } },
       { id: 't2', type: 'task', position: { x: 300, y: 300 }, data: { type: 'task', title: 'Setup IT Access', assignee: 'IT Admin', description: 'Create email, Slack, VPN, and tool access for new employee.' } },
       { id: 'a1', type: 'approval', position: { x: 300, y: 440 }, data: { type: 'approval', title: 'Manager Approval', approverRole: 'Manager' } },
       { id: 'au1', type: 'automated', position: { x: 300, y: 580 }, data: { type: 'automated', title: 'Send Welcome Email', actionId: 'send_email' } },

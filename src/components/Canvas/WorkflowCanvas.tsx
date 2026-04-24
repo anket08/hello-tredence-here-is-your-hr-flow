@@ -6,9 +6,12 @@ import {
   MiniMap,
   ReactFlowProvider,
   useReactFlow,
+  getNodesBounds,
+  getViewportForBounds,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
+import { toPng } from 'html-to-image';
 
 import { useStore } from '../../store/useStore';
 import { nodeTypes } from '../Nodes';
@@ -16,7 +19,7 @@ import type { NodeType, WorkflowNode } from '../../types/workflow';
 
 const WorkflowCanvasInner: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, getNodes } = useReactFlow();
 
   const tabs = useStore((s) => s.tabs);
   const activeTabId = useStore((s) => s.activeTabId);
@@ -29,6 +32,47 @@ const WorkflowCanvasInner: React.FC = () => {
   const addNode = useStore((s) => s.addNode);
   const setSelectedNode = useStore((s) => s.setSelectedNode);
   const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
+  const setDownloadPngFn = useStore((s) => s.setDownloadPngFn);
+
+  React.useEffect(() => {
+    setDownloadPngFn(() => {
+      const nodesBounds = getNodesBounds(getNodes());
+      const width = 1200; // Force high-res standard width
+      const height = 800; // Force high-res standard height
+      
+      const transform = getViewportForBounds(
+        nodesBounds,
+        width,
+        height,
+        0.5,
+        2,
+        0
+      );
+
+      const viewportEl = document.querySelector('.react-flow__viewport') as HTMLElement;
+      if (!viewportEl) return;
+
+      toPng(viewportEl, {
+        backgroundColor: '#f8fafc',
+        width,
+        height,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.zoom})`,
+        },
+        pixelRatio: 2, // High resolution
+        quality: 1,
+      })
+        .then((dataUrl) => {
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = `${activeTab.name.replace(/\s+/g, '_').toLowerCase()}_graph.png`;
+          a.click();
+        })
+        .catch(console.error);
+    });
+  }, [setDownloadPngFn, getNodes, activeTab.name]);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -80,6 +124,7 @@ const WorkflowCanvasInner: React.FC = () => {
         onDragOver={onDragOver}
         onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
+        defaultEdgeOptions={{ style: { stroke: '#94a3b8', strokeWidth: 2 }, type: 'smoothstep' }}
         fitView
         fitViewOptions={{ maxZoom: 1.2 }}
         minZoom={0.3}

@@ -56,6 +56,10 @@ export const SandboxPanel: React.FC = () => {
   const [simulationResult, setSimulationResult] = useState<{ success: boolean; log: string[] } | null>(null);
 
   const handleSimulate = async () => {
+    if (criticalErrors.length > 0) {
+      setSimulationResult({ success: false, log: ['[System] Workflow cannot run due to validation errors. Please fix errors first.'] });
+      return;
+    }
     setIsLoading(true);
     setSimulationResult(null);
     try {
@@ -241,8 +245,13 @@ export const SandboxPanel: React.FC = () => {
         )}
         <button
           onClick={handleSimulate}
-          disabled={isLoading}
-          className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-bold bg-gradient-to-r from-[#f06422] to-[#e8530e] text-white rounded-xl transition-all disabled:opacity-50 shadow-md shadow-orange-200/40"
+          disabled={isLoading || criticalErrors.length > 0}
+          title={criticalErrors.length > 0 ? "Fix errors to run" : "Run Workflow"}
+          className={`ml-auto flex items-center gap-2 px-4 py-2 text-sm font-bold text-white rounded-xl transition-all shadow-md ${
+            isLoading || criticalErrors.length > 0
+              ? 'bg-slate-400 shadow-none cursor-not-allowed opacity-70'
+              : 'bg-gradient-to-r from-[#f06422] to-[#e8530e] shadow-orange-200/40 hover:opacity-90'
+          }`}
         >
           {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} fill="currentColor" />}
           Run

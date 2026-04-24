@@ -20,6 +20,7 @@ function App() {
   const future = useStore((s) => s.future);
   const sandboxOpen = useStore((s) => s.sandboxOpen);
   const setSandboxOpen = useStore((s) => s.setSandboxOpen);
+  const downloadPngFn = useStore((s) => s.downloadPngFn);
 
   const [showTemplates, setShowTemplates] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +37,10 @@ function App() {
     document.body.appendChild(a);
     a.click();
     a.remove();
+  };
+
+  const handleDownloadPng = () => {
+    if (downloadPngFn) downloadPngFn();
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +72,7 @@ function App() {
             T
           </div>
           <div className="h-6 w-px bg-slate-200/60"></div>
-          <span className="text-sm font-bold text-slate-700 tracking-tight">HR Workflow Designer</span>
+          <span className="text-sm font-bold text-slate-700 tracking-tight">HR4TREDENCE</span>
         </div>
 
         {/* Center Toolbar */}
@@ -120,14 +125,24 @@ function App() {
 
           <div className="w-px h-5 bg-slate-300/40 mx-1"></div>
 
-          {/* Export */}
+          {/* Export JSON */}
           <button onClick={handleDownload} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50/80 transition-all" title="Export JSON">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2v-4" />
               <polyline points="7,10 12,15 17,10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Export
+            Export JSON
+          </button>
+
+          {/* Export PNG */}
+          <button onClick={handleDownloadPng} className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-cyan-700 hover:bg-cyan-50/80 transition-all" title="Download High-Res PNG">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+            PNG
           </button>
 
           {/* Import */}

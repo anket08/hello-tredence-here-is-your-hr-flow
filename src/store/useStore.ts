@@ -28,6 +28,7 @@ export interface StoreState {
   activeTabId: string;
   selectedNodeId: string | null;
   sandboxOpen: boolean;
+  downloadPngFn: (() => void) | null;
 
   // Undo / Redo (past/future stacks)
   past: Snapshot[];
@@ -54,6 +55,7 @@ export interface StoreState {
   autoLayout: () => void;
   importWorkflow: (json: string) => void;
   setSandboxOpen: (open: boolean) => void;
+  setDownloadPngFn: (fn: () => void) => void;
 }
 
 // ─── Helpers ───
@@ -69,7 +71,7 @@ const defaultTab: WorkflowTab = {
 
 const sampleNodes: WorkflowNode[] = [
   { id: 'start-1', type: 'start', position: { x: 300, y: 40 }, data: { type: 'start', title: 'Onboarding Start' } },
-  { id: 'task-1', type: 'task', position: { x: 300, y: 180 }, data: { type: 'task', title: 'Collect Documents', assignee: 'HR Intern', description: 'Collect ID proof, tax forms, and offer letter acknowledgement.' } },
+  { id: 'task-1', type: 'task', position: { x: 300, y: 180 }, data: { type: 'task', title: 'Collect Documents', assignee: '-ANKET AERI', description: 'Collect ID proof, tax forms, and offer letter acknowledgement.' } },
   { id: 'approval-1', type: 'approval', position: { x: 300, y: 330 }, data: { type: 'approval', title: 'Manager Review', approverRole: 'Manager' } },
   { id: 'auto-1', type: 'automated', position: { x: 300, y: 480 }, data: { type: 'automated', title: 'Send Welcome Email', actionId: 'send_email', actionParams: { to: 'new_hire@tredence.com' } } },
   { id: 'end-1', type: 'end', position: { x: 300, y: 620 }, data: { type: 'end', title: 'Process Complete', endMessage: 'Onboarding finished successfully.', isSummary: true } },
@@ -97,6 +99,7 @@ export const useStore = create<StoreState>((set, get) => ({
   activeTabId: defaultTab.id,
   selectedNodeId: null,
   sandboxOpen: false,
+  downloadPngFn: null,
   past: [],
   future: [],
 
@@ -171,6 +174,8 @@ export const useStore = create<StoreState>((set, get) => ({
   },
 
   setSandboxOpen: (open: boolean) => set({ sandboxOpen: open }),
+
+  setDownloadPngFn: (fn: () => void) => set({ downloadPngFn: fn }),
 
   // ── Canvas actions ──
   onNodesChange: (changes: NodeChange[]) => {

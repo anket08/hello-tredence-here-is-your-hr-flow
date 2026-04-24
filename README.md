@@ -11,6 +11,9 @@
 
 *Designed & engineered by **Anket** for the Tredence Analytics AI Agentic Engineering Internship 2026.*
 
+![Main Workflow Designer](./docs/hero.png)
+*HR4TREDENCE Canvas & Properties Panel (Note: You can save versions of each node and roll back to previous versions at any time)*
+
 </div>
 
 ---
@@ -33,6 +36,9 @@
 > **👉 [https://hr4tredence.netlify.app](https://hr4tredence.netlify.app/)**
 
 Try it out — drag nodes from the sidebar, connect them, edit properties, run the simulation, and export your workflow as JSON.
+
+![Workflow Templates](./docs/templates.png)
+*Ready-to-use Workflow Templates*
 
 ---
 
@@ -66,6 +72,9 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 | 🔗 **Edge Connections** | Connect nodes by dragging between handles; delete with keyboard |
 | 🧪 **Simulation Sandbox** | Run your workflow through the Tredence mock execution engine |
 | 📡 **Mock API** | `GET /automations` for action types, `POST /simulate` for execution logs |
+
+![Simulation Sandbox](./docs/sandbox.png)
+*Real-time Simulation Execution Sandbox*
 
 ### Bonus (Implemented)
 
