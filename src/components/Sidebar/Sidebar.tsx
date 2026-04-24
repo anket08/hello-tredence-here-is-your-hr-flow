@@ -10,7 +10,7 @@ export const Sidebar: React.FC = () => {
 
   const nodeItems = [
     {
-      type: 'start' as NodeType, title: 'Start Event', desc: 'Workflow entry point',
+      type: 'start' as NodeType, title: 'Start', desc: 'Workflow entry',
       color: '#10b981', lightBg: 'bg-emerald-50', hoverBg: 'hover:bg-emerald-100/80',
       borderHover: 'hover:border-emerald-300',
       icon: (
@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
       ),
     },
     {
-      type: 'task' as NodeType, title: 'Human Task', desc: 'Manual task assignment',
+      type: 'task' as NodeType, title: 'Task', desc: 'Human action',
       color: '#3b82f6', lightBg: 'bg-blue-50', hoverBg: 'hover:bg-blue-100/80',
       borderHover: 'hover:border-blue-300',
       icon: (
@@ -34,7 +34,7 @@ export const Sidebar: React.FC = () => {
       ),
     },
     {
-      type: 'approval' as NodeType, title: 'Approval', desc: 'Manager / HR approval',
+      type: 'approval' as NodeType, title: 'Approval', desc: 'Manager sign-off',
       color: '#f59e0b', lightBg: 'bg-amber-50', hoverBg: 'hover:bg-amber-100/80',
       borderHover: 'hover:border-amber-300',
       icon: (
@@ -46,7 +46,7 @@ export const Sidebar: React.FC = () => {
       ),
     },
     {
-      type: 'automated' as NodeType, title: 'Automated Step', desc: 'System action',
+      type: 'automated' as NodeType, title: 'Automated', desc: 'System action',
       color: '#8b5cf6', lightBg: 'bg-violet-50', hoverBg: 'hover:bg-violet-100/80',
       borderHover: 'hover:border-violet-300',
       icon: (
@@ -56,7 +56,7 @@ export const Sidebar: React.FC = () => {
       ),
     },
     {
-      type: 'end' as NodeType, title: 'End Event', desc: 'Workflow completion',
+      type: 'end' as NodeType, title: 'End', desc: 'Workflow completion',
       color: '#ef4444', lightBg: 'bg-rose-50', hoverBg: 'hover:bg-rose-100/80',
       borderHover: 'hover:border-rose-300',
       icon: (
@@ -69,30 +69,30 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-56 glass-sidebar flex flex-col h-full z-10 shrink-0">
-      <div className="px-4 pt-4 pb-3">
-        <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em]">Node Types</h2>
-        <p className="text-[9px] text-slate-400 mt-0.5">Drag onto the canvas</p>
+    <aside className="w-full md:w-56 h-auto md:h-full glass-sidebar flex flex-row md:flex-col z-10 shrink-0 overflow-x-auto md:overflow-y-auto">
+      <div className="px-3 md:px-4 py-2 md:pt-4 md:pb-3 shrink-0 flex flex-col justify-center border-r md:border-r-0 md:border-b border-slate-200/40 mr-2 md:mr-0">
+        <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] whitespace-nowrap">Nodes</h2>
+        <p className="text-[9px] text-slate-400 mt-0.5 hidden md:block">Drag onto the canvas</p>
       </div>
-      <div className="px-3 pb-4 flex-1 overflow-y-auto flex flex-col gap-1.5">
+      <div className="px-2 md:px-3 py-2 md:pb-4 flex-1 flex flex-row md:flex-col gap-1.5 md:overflow-y-auto">
         {nodeItems.map((node) => (
           <div
             key={node.type}
-            className={`group flex items-center gap-3 px-3 py-3 rounded-xl cursor-grab 
+            className={`group flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 md:py-3 rounded-xl cursor-grab shrink-0
               bg-white/40 border border-transparent ${node.hoverBg} ${node.borderHover}
               transition-all duration-200 active:cursor-grabbing sidebar-node-item`}
             onDragStart={(event) => onDragStart(event, node.type, node.title)}
             draggable
           >
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:shadow-md"
+              className="w-7 h-7 md:w-9 md:h-9 rounded-lg md:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:shadow-md"
               style={{ background: node.color, color: '#fff' }}
             >
-              {node.icon}
+              <div className="scale-75 md:scale-100 flex items-center justify-center">{node.icon}</div>
             </div>
-            <div className="min-w-0">
-              <div className="font-semibold text-[12px] text-slate-700 group-hover:text-slate-900 transition-colors">{node.title}</div>
-              <div className="text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors">{node.desc}</div>
+            <div className="min-w-0 pr-2 md:pr-0">
+              <div className="font-semibold text-[11px] md:text-[12px] text-slate-700 group-hover:text-slate-900 transition-colors">{node.title}</div>
+              <div className="text-[9px] md:text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors hidden md:block">{node.desc}</div>
             </div>
           </div>
         ))}

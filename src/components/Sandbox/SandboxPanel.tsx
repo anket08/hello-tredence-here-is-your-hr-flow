@@ -92,7 +92,7 @@ export const SandboxPanel: React.FC = () => {
   if (!sandboxOpen) return null;
 
   return (
-    <aside className="w-[340px] glass-panel h-full flex flex-col z-10 shrink-0 animate-slide-in-right">
+    <aside className="w-full md:w-[340px] h-[60%] md:h-full glass-panel absolute bottom-0 md:relative flex flex-col z-20 md:z-10 shrink-0 animate-slide-in-right border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none bg-white/95 md:bg-white/70">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/40 shrink-0">
         <div className="flex items-center gap-2.5">

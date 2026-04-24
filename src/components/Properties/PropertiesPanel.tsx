@@ -27,7 +27,7 @@ export const PropertiesPanel: React.FC = () => {
 
   if (!selectedNode) {
     return (
-      <aside className="w-72 glass-panel flex flex-col justify-center items-center text-slate-400 h-full z-10">
+      <aside className="w-full md:w-72 h-[35%] md:h-full glass-panel flex flex-col justify-center items-center text-slate-400 z-20 md:z-10 border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none bg-white/95 md:bg-white/70">
         <div className="text-center px-6">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
             <span className="text-xl">🖱️</span>
@@ -57,7 +57,7 @@ export const PropertiesPanel: React.FC = () => {
   const nodeColor = colorMap[type] || '#64748b';
 
   return (
-    <aside className="w-72 glass-panel h-full flex flex-col z-10 overflow-y-auto">
+    <aside className="w-full md:w-72 h-[45%] md:h-full glass-panel flex flex-col z-20 md:z-10 overflow-y-auto border-t md:border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none bg-white/95 md:bg-white/70">
       {/* Header */}
       <div className="p-4 border-b border-slate-200/50 flex items-center justify-between sticky top-0 bg-white/70 backdrop-blur-lg z-10">
         <div className="flex items-center gap-2.5">

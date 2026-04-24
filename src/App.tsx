@@ -61,7 +61,7 @@ function App() {
       <TemplateModal isOpen={showTemplates} onClose={() => setShowTemplates(false)} />
 
       {/* ── Header ── */}
-      <header className="h-12 glass-strong flex items-center justify-between px-4 z-30 shrink-0 shadow-sm">
+      <header className="min-h-[3rem] md:h-12 glass-strong flex flex-wrap md:flex-nowrap items-center justify-between px-2 md:px-4 py-2 md:py-0 z-30 shrink-0 shadow-sm gap-2">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 bg-gradient-to-br from-[#f06422] to-[#e8530e] rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-orange-200/60">
             T
@@ -71,7 +71,7 @@ function App() {
         </div>
 
         {/* Center Toolbar */}
-        <div className="flex items-center gap-0.5 glass rounded-xl px-1.5 py-1">
+        <div className="flex items-center gap-0.5 glass rounded-xl px-1.5 py-1 overflow-x-auto max-w-full md:max-w-none order-3 md:order-none w-full md:w-auto mt-1 md:mt-0 hide-scrollbar">
           {/* Undo */}
           <button onClick={undo} disabled={!canUndo} className="group p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/70 disabled:opacity-20 disabled:cursor-not-allowed transition-all" title="Undo (Ctrl+Z)">
             <svg viewBox="0 0 24 24" className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -144,7 +144,7 @@ function App() {
         {/* Right side — Test Workflow button */}
         <button
           onClick={() => setSandboxOpen(!sandboxOpen)}
-          className={`group flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
+          className={`group flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
             sandboxOpen
               ? 'bg-[#f06422] text-white shadow-md shadow-orange-200/50'
               : 'bg-[#f06422]/10 text-[#d4561d] hover:bg-[#f06422]/20 border border-[#f06422]/20 hover:border-[#f06422]/40'
@@ -161,7 +161,7 @@ function App() {
       <TabBar />
 
       {/* ── Main Layout ── */}
-      <main className="flex-1 flex overflow-hidden relative">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         <Sidebar />
         <div className="flex-1 relative">
           <WorkflowCanvas />
@@ -174,10 +174,10 @@ function App() {
       <StatusBar />
 
       {/* ── Signature ── */}
-      <div className="fixed bottom-9 left-3 z-50">
-        <div className="glass rounded-full px-3 py-0.5 flex items-center gap-1.5 shadow-md">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse"></div>
-          <span className="text-[10px] font-medium text-slate-500">
+      <div className="fixed bottom-9 md:bottom-9 left-2 md:left-3 z-50">
+        <div className="glass rounded-full px-2 md:px-3 py-0.5 flex items-center gap-1.5 shadow-md">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse shrink-0"></div>
+          <span className="text-[9px] md:text-[10px] font-medium text-slate-500 truncate max-w-[200px] md:max-w-none">
             Built for <span className="text-[#f06422] font-bold">Tredence</span> by <a href="https://aerianket.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-bold hover:text-[#f06422] transition-colors underline decoration-slate-300 hover:decoration-[#f06422] underline-offset-2">Anket</a>
           </span>
         </div>
