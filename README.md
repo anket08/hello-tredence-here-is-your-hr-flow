@@ -1,178 +1,216 @@
-# Tredence Studio — HR Workflow Designer
+<div align="center">
 
-> A glassmorphic, single-page HR Workflow Designer prototype built with **React 18**, **TypeScript**, **React Flow**, and **Zustand**.  
-> **Designed and engineered by Anket** for the Tredence Analytics AI Agentic Engineering Internship 2025.
+# 🟠 Tredence Studio — HR Workflow Designer
+
+**A glassmorphic, single-page HR Workflow Designer built with React, TypeScript, React Flow & Zustand.**
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-hr4tredence.netlify.app-f06422?style=for-the-badge)](https://hr4tredence.netlify.app/)
+[![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind](https://img.shields.io/badge/Tailwind-v4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
+*Designed & engineered by **Anket** for the Tredence Analytics AI Agentic Engineering Internship 2025.*
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Live Demo](#-live-demo)
+- [Quick Start](#-quick-start)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Design Decisions](#-design-decisions)
+- [Tech Stack](#-tech-stack)
+- [What I'd Add Next](#-what-id-add-next)
+- [Assumptions](#-assumptions)
+
+---
+
+## 🌐 Live Demo
+
+> **👉 [https://hr4tredence.netlify.app](https://hr4tredence.netlify.app/)**
+
+Try it out — drag nodes from the sidebar, connect them, edit properties, run the simulation, and export your workflow as JSON.
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# 1. Install dependencies
+# Clone the repo
+git clone https://github.com/anket08/hello-tredence-here-is-your-hr-flow.git
+cd hello-tredence-here-is-your-hr-flow
+
+# Install dependencies
 npm install
 
-# 2. Start the dev server
+# Start dev server
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ---
 
-## 🏗️ Architecture Overview
+## ✨ Features
+
+### Core (Required)
+
+| Feature | Description |
+| :--- | :--- |
+| 🎨 **Drag & Drop Canvas** | Drag node components from the sidebar onto a React Flow canvas |
+| 🧩 **5 Custom Node Types** | Start, Task, Approval, Automated Step, End — each with distinct colors and icons |
+| 📝 **Dynamic Property Forms** | Click any node to edit its fields — forms auto-switch based on node type |
+| 🔗 **Edge Connections** | Connect nodes by dragging between handles; delete with keyboard |
+| 🧪 **Simulation Sandbox** | Run your workflow through the Tredence mock execution engine |
+| 📡 **Mock API** | `GET /automations` for action types, `POST /simulate` for execution logs |
+
+### Bonus (Implemented)
+
+| Feature | Description |
+| :--- | :--- |
+| 📤 **Export JSON** | Download the current workflow as a `.json` file |
+| 📥 **Import JSON** | Load any previously exported workflow back onto the canvas |
+| ↩️ **Undo / Redo** | Full history stack with `Ctrl+Z` / `Ctrl+Y` keyboard shortcuts |
+| 🗺️ **MiniMap + Zoom** | Interactive minimap and zoom controls on the canvas |
+| ⚠️ **Validation on Nodes** | Amber warning badges appear directly on disconnected or misconfigured nodes |
+| 📐 **Auto-Layout** | One-click Dagre-powered automatic node arrangement |
+| 📑 **Multi-Tab Workflows** | Create, rename, and close workflow tabs — each tab is independent |
+| 📋 **Download Sim Log** | Export simulation results as a `.txt` file |
+| ⚡ **One-Click Sample** | Instantly load a full "Employee Onboarding" demo workflow |
+
+---
+
+## 🏗️ Architecture
 
 ```
 src/
+│
 ├── api/
-│   └── mockApi.ts               # Mock REST layer (GET /automations, POST /simulate)
+│   └── mockApi.ts                # Mock REST layer (automations + simulate)
+│
 ├── components/
 │   ├── Canvas/
-│   │   └── WorkflowCanvas.tsx   # React Flow wrapper — drag/drop, edge connect, selection
+│   │   └── WorkflowCanvas.tsx    # React Flow wrapper — drag/drop, edges, selection
 │   ├── Nodes/
-│   │   ├── BaseNode.tsx         # Shared glassmorphic node shell with validation badges
-│   │   ├── StartNode.tsx        # Green entry-point node
-│   │   ├── TaskNode.tsx         # Blue human-task node (assignee, due date)
-│   │   ├── ApprovalNode.tsx     # Amber approval node (role, auto-approve)
-│   │   ├── AutomatedNode.tsx    # Violet system-action node (dynamic action picker)
-│   │   ├── EndNode.tsx          # Red completion node (message, summary toggle)
-│   │   └── index.ts             # Barrel export of nodeTypes map
+│   │   ├── BaseNode.tsx          # Shared glassmorphic shell + validation badges
+│   │   ├── StartNode.tsx         # 🟢 Green — entry point
+│   │   ├── TaskNode.tsx          # 🔵 Blue — human task (assignee, due date)
+│   │   ├── ApprovalNode.tsx      # 🟡 Amber — manager/HR approval
+│   │   ├── AutomatedNode.tsx     # 🟣 Violet — system action (email, doc gen)
+│   │   ├── EndNode.tsx           # 🔴 Red — completion node
+│   │   └── index.ts              # Barrel export
 │   ├── Properties/
-│   │   └── PropertiesPanel.tsx  # Right panel — context-aware dynamic forms + delete
+│   │   └── PropertiesPanel.tsx   # Right panel — dynamic forms + delete button
 │   ├── Sandbox/
-│   │   └── SandboxPanel.tsx     # Floating modal — simulation engine + log export
+│   │   └── SandboxPanel.tsx      # Modal — simulation engine + log viewer
 │   ├── Sidebar/
-│   │   └── Sidebar.tsx          # Left draggable node palette
+│   │   └── Sidebar.tsx           # Left panel — draggable node palette
 │   └── Tabs/
-│       └── TabBar.tsx           # Multi-workflow tab bar — create, rename, close
+│       └── TabBar.tsx            # Tab bar — create, rename, switch, close
+│
 ├── hooks/
-│   └── useValidation.ts         # Memoized graph validation hook
+│   └── useValidation.ts          # Memoized graph validation hook
+│
 ├── store/
-│   └── useStore.ts              # Zustand store — tabs, undo/redo, auto-layout, import
+│   └── useStore.ts               # Zustand — tabs, undo/redo, auto-layout, import
+│
 ├── types/
-│   └── workflow.ts              # Strict TS interfaces per node type
+│   └── workflow.ts               # Strict TypeScript interfaces (discriminated unions)
+│
 ├── utils/
-│   ├── autoLayout.ts            # Dagre-based automatic node arrangement
-│   └── validation.ts            # Graph structure validator (Start/End, connectivity, fields)
-├── App.tsx                      # Root — header toolbar, tab bar, three-panel layout
-├── main.tsx                     # React DOM entry
-└── index.css                    # Glassmorphism, Tredence theme, animations
+│   ├── autoLayout.ts             # Dagre graph layout algorithm
+│   └── validation.ts             # Structure validator (Start/End, connectivity, fields)
+│
+├── App.tsx                       # Root layout + toolbar
+├── main.tsx                      # Entry point
+└── index.css                     # Glassmorphism, Tredence theme, animations
 ```
 
 ---
 
 ## 🧠 Design Decisions
 
-### State Management — Zustand
+### Why Zustand?
 
-React Flow fires hundreds of updates during drag operations. **Zustand's selector-based subscriptions** ensure only affected components re-render. The store is structured around a **tabs array** — each tab holds its own `nodes[]` and `edges[]`. All canvas mutations (`addNode`, `deleteSelectedElements`, `onConnect`, etc.) are scoped to the active tab via a shared `updateActiveTab()` helper.
+React Flow fires hundreds of state updates during drag operations. Zustand's **selector-based subscriptions** ensure only affected components re-render — unlike Context, which would re-render the entire tree. The store is organized around a **tabs array**, with all canvas mutations scoped to the active tab through a shared `updateActiveTab()` helper.
 
-### Multi-Tab Workflows
+### Why Glassmorphism?
 
-Users can create, rename, and close workflow tabs. Switching tabs resets selection and undo history. Each tab is an independent workflow, enabling side-by-side comparison of e.g., "Onboarding v1" vs "Onboarding v2".
+The frosted-glass aesthetic (`backdrop-filter: blur()`) visually separates the three-panel layout (sidebar, canvas, properties) while keeping everything feel cohesive. Each node type has a **colored accent header** — making them instantly recognizable at a glance on a busy canvas.
 
-### Undo / Redo
+### Node Architecture — Composition over Inheritance
 
-Rather than integrating a temporal middleware, I implemented a **manual history stack** (`history[]` + `historyIndex`). Every destructive action (`addNode`, `deleteSelectedElements`, `onConnect`, `loadSampleWorkflow`, `autoLayout`) calls `pushHistory()` before mutating state. This gives fine-grained control over which operations are undoable. Keyboard shortcuts `Ctrl+Z` / `Ctrl+Y` are bound at the root `<div>`.
+All five node types **compose** a single `BaseNode` wrapper that handles:
 
-### Glassmorphism
+- **Handle positioning** — Start = no target handle, End = no source handle
+- **Selection glow** — orange-tinted shadow matching Tredence brand
+- **Validation badges** — amber ⚠️ icon + inline error message
+- **Glassmorphic shell** — shared border-radius, backdrop blur, shadow
 
-The UI uses `backdrop-filter: blur()` with translucent white backgrounds throughout — header, sidebar, properties panel, and canvas nodes. This creates visual depth while keeping the layout unified. Each node type has a colored accent header (`accentColor` + `accentBg` props on `BaseNode`), making them instantly distinguishable on the canvas.
-
-### Node Architecture — Composition
-
-All five node types compose a single `BaseNode` wrapper that handles:
-
-- Handle positioning with smart visibility (Start = no target, End = no source)
-- Selection glow (orange-tinted shadow matching Tredence brand)
-- Glassmorphic card shell (shared border-radius, backdrop blur, shadow)
-- **Validation error badges** — amber warning triangle + inline message
-
-Adding a new node type requires ~20 lines: a new data interface, a component that wraps `BaseNode`, and a registration in `nodeTypes`.
+> Adding a new node type = ~20 lines: one data interface + one component wrapping `BaseNode`.
 
 ### Real-Time Validation
 
-The `useValidation` hook runs a memoized `validateWorkflow()` on every node/edge change. It checks:
+The `useValidation()` hook runs a memoized `validateWorkflow()` on every node/edge change:
 
-- Exactly one Start node exists
-- At least one End node exists
-- Every non-terminal node has both incoming and outgoing connections
-- All nodes have a non-empty title
+- ✅ Exactly one Start node
+- ✅ At least one End node
+- ✅ All mid-nodes have incoming + outgoing connections
+- ✅ All nodes have non-empty titles
 
-Errors appear as **amber badges directly on the affected nodes** — not just in a separate panel.
+Errors appear as **amber badges directly on the affected canvas nodes** — not hidden in a log.
 
-### Auto-Layout (Dagre)
+### Undo / Redo
 
-The `autoLayout()` action uses `@dagrejs/dagre` to compute a top-to-bottom directed graph layout. It preserves all edge connections and re-positions nodes with `60px` horizontal and `80px` vertical spacing. This is especially useful after importing a workflow or after heavy manual editing.
-
-### Mock API Layer
-
-| Endpoint | Method | Behavior |
-|---|---|---|
-| `/automations` | GET | Returns system actions (Send Email, Generate Doc, Notify Slack) with 500ms delay |
-| `/simulate` | POST | Traverses graph from Start, logs each step, validates reachability, 1s delay |
-
----
-
-## ✅ Feature Checklist
-
-### Required
-| Feature | Status |
-|---|---|
-| React Flow canvas with drag-and-drop | ✅ |
-| 5 custom node types (Start, Task, Approval, Automated, End) | ✅ |
-| Node configuration forms per type | ✅ |
-| Mock API (GET /automations, POST /simulate) | ✅ |
-| Workflow Test / Sandbox panel | ✅ |
-| Clean folder structure and type safety | ✅ |
-
-### Bonus
-| Feature | Status |
-|---|---|
-| Export workflow as JSON | ✅ |
-| Import workflow from JSON | ✅ |
-| Undo / Redo (Ctrl+Z / Ctrl+Y) | ✅ |
-| MiniMap + zoom controls | ✅ |
-| Validation errors visually shown on nodes | ✅ |
-| Auto-layout (Dagre) | ✅ |
-| Multi-tab workflows (create, rename, close) | ✅ |
-| Download simulation log | ✅ |
-| One-click sample workflow | ✅ |
-
----
-
-## 🔮 What I'd Add With More Time
-
-1. **Conditional branching** — Approval nodes with "Approved"/"Rejected" output handles for non-linear flows.
-2. **Node version history** — Temporal snapshots per node using the existing history infrastructure.
-3. **Node templates** — Preset partial workflows (e.g., "Leave Approval", "Document Verification") loadable from a template picker.
-4. **E2E tests** — Playwright tests for drag-and-drop, form editing, simulation, and import/export.
-5. **Backend persistence** — FastAPI + PostgreSQL to save and list multiple workflows per user.
-6. **Collaborative editing** — Zustand + Yjs for real-time multi-user workflow design.
+A manual history stack (`history[]` + `historyIndex`) records snapshots before every destructive action (`addNode`, `deleteSelectedElements`, `onConnect`, `autoLayout`). The stack is capped at 50 entries. Keyboard shortcuts `Ctrl+Z` / `Ctrl+Y` are bound at the root element.
 
 ---
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Framework | React 18 + TypeScript (Vite) |
-| Flow Engine | @xyflow/react (React Flow v12) |
-| State | Zustand |
-| Graph Layout | @dagrejs/dagre |
-| Styling | Tailwind CSS v4 + custom glassmorphism |
-| Icons | Lucide React |
-| IDs | uuid v11 |
+| :--- | :--- |
+| **Framework** | React 18 + TypeScript (Vite) |
+| **Flow Engine** | @xyflow/react (React Flow v12) |
+| **State** | Zustand |
+| **Graph Layout** | @dagrejs/dagre |
+| **Styling** | Tailwind CSS v4 + custom glassmorphism CSS |
+| **Icons** | Lucide React |
+| **IDs** | uuid v11 |
+| **Hosting** | Netlify |
+
+---
+
+## 🔮 What I'd Add Next
+
+| Priority | Feature | Why |
+| :---: | :--- | :--- |
+| 1 | **Conditional branching** | Approval → "Approved" / "Rejected" output handles for non-linear flows |
+| 2 | **Node version history** | Temporal snapshots per node using the existing history infra |
+| 3 | **Preset templates** | One-click "Leave Approval", "Document Verification" partial workflows |
+| 4 | **E2E tests** | Playwright coverage for drag-drop, forms, simulation, import/export |
+| 5 | **Backend persistence** | FastAPI + PostgreSQL to save/list workflows per user |
+| 6 | **Collaborative editing** | Zustand + Yjs for real-time multi-user design |
 
 ---
 
 ## 📝 Assumptions
 
-- **Linear simulation**: The sandbox simulates workflows linearly (following edges from Start). Branching is architecturally supported but not simulated.
-- **No backend**: Export JSON is the save mechanism per the brief's constraint.
-- **Single-page**: The entire designer lives on one page with no routing.
-- **Glassmorphic UI**: Intentional design choice to demonstrate frontend polish. Works best on modern browsers with hardware-accelerated `backdrop-filter`.
-- **Undo granularity**: Undo tracks destructive operations (add, delete, connect, layout). Node position drags are not individually tracked to avoid flooding the history stack.
+- **Linear simulation** — The sandbox follows edges linearly from Start. Branching is architecturally supported but not simulated in the prototype.
+- **No backend** — Export JSON serves as the save mechanism per the brief.
+- **Single-page** — The entire designer lives on one page with no routing needed.
+- **Glassmorphic UI** — Intentional design choice to demonstrate frontend polish. Requires modern browser with hardware-accelerated `backdrop-filter`.
+- **Undo granularity** — Undo tracks destructive ops (add, delete, connect, layout). Node position drags are not individually tracked to avoid flooding the history stack.
 
 ---
 
-*Built with care for the Tredence Studio AI Agents Engineering team.*
+<div align="center">
+
+*Built with ❤️ for the Tredence Studio AI Agents Engineering team.*
+
+**[View Live →](https://hr4tredence.netlify.app/)**
+
+</div>
