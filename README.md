@@ -60,7 +60,17 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ## ✨ Features
 
-### Core Capabilities
+### 🚀 Latest Major Release (v2.0 Updates)
+
+The platform has been heavily upgraded to simulate a full enterprise-grade experience:
+- **Massive Template Library**: 40+ highly complex, real-world HR templates (e.g., *M&A Integration*, *SOC2 Audits*, *RIF Process*) built-in.
+- **Fuzzy Search Engine**: Instantly find specific templates with typo-tolerant, real-time searching in the Template Modal.
+- **Workflow Insights AI**: A brand new analytics engine that scans your canvas and automatically generates Risk Scores, Execution Time Estimates, and Node Complexity Metrics.
+- **Cinematic Auto-Layout**: The `Arrange` feature now perfectly cascades nodes using `dagre` and elegantly animates the canvas (`fitView`) to frame your new architecture perfectly.
+- **Advanced Action Toolbar**: Redesigned top navigation featuring Quick Build, Templates, PNG High-Res Export, JSON I/O, Undo/Redo, and Fullscreen modes.
+- **Clipboard Mechanics**: Seamlessly duplicate nodes across the canvas with native `Ctrl+C` and `Ctrl+V` support.
+
+### ⚙️ Core Capabilities
 
 | Feature | Description |
 | :--- | :--- |
