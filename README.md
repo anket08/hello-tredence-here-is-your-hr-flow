@@ -69,6 +69,7 @@ The platform has been heavily upgraded to simulate a full enterprise-grade exper
 - **Cinematic Auto-Layout**: The `Arrange` feature now perfectly cascades nodes using `dagre` and elegantly animates the canvas (`fitView`) to frame your new architecture perfectly.
 - **Advanced Action Toolbar**: Redesigned top navigation featuring Quick Build, Templates, PNG High-Res Export, JSON I/O, Undo/Redo, and Fullscreen modes.
 - **Clipboard Mechanics**: Seamlessly duplicate nodes across the canvas with native `Ctrl+C` and `Ctrl+V` support.
+- **Dynamic Theming Engine**: Switch instantly between 6 professional themes (Tredence Default, Ocean Blue, Midnight Violet, Forest Green, Sunset Rose, Cyberpunk) with fully adaptive UI glassmorphism and node styling.
 - **📱 Fully Mobile Responsive**: Access, view, and simulate your workflows on the go. The entire application (canvas, properties, modals) is meticulously optimized for touch screens and mobile displays.
 
 ### ⚙️ Core Capabilities
@@ -99,6 +100,19 @@ The platform has been heavily upgraded to simulate a full enterprise-grade exper
 
 ![Action Toolbar](./docs/toolbar.png)
 *Fully-featured Application Toolbar*
+
+### 🎨 Dynamic Theming Engine
+
+The platform features a sophisticated global CSS custom property system that completely transforms the visual identity in real-time. Nodes, glassmorphic panels, and canvas elements fully adapt to both light and dark variations.
+
+<div align="center">
+  <img src="./public/docs/themes/theme_cyberpunk.png" width="48%" alt="Cyberpunk Theme" />
+  <img src="./public/docs/themes/theme_midnight.png" width="48%" alt="Midnight Violet Theme" />
+  <br/>
+  <img src="./public/docs/themes/theme_sunset.png" width="32%" alt="Sunset Rose Theme" />
+  <img src="./public/docs/themes/theme_ocean.png" width="32%" alt="Ocean Blue Theme" />
+  <img src="./public/docs/themes/theme_dropdown.png" width="32%" alt="Theme Selector" />
+</div>
 
 ### 📱 Mobile Optimized Experience
 

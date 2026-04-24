@@ -144,11 +144,15 @@ const WorkflowCanvasInner: React.FC = () => {
         deleteKeyCode={["Backspace", "Delete"]}
         style={{ background: 'transparent' }}
       >
-        <Background gap={20} size={1} color="#cbd5e1" />
-        <Controls className="!bg-white/80 !backdrop-blur-lg !border-slate-200/60 !rounded-xl !shadow-lg" />
+        <Background gap={20} size={1} color="var(--theme-grid-dot)" />
+        <Controls 
+          className="!backdrop-blur-lg !rounded-xl !shadow-lg transition-colors duration-400" 
+          style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)', fill: 'var(--theme-text)' }}
+        />
         <MiniMap
-          className="!border-slate-200/60 !shadow-lg !rounded-xl overflow-hidden"
-          style={{ background: 'rgba(255,255,255,0.8)' }}
+          className="!shadow-lg !rounded-xl overflow-hidden transition-colors duration-400"
+          style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)', borderWidth: '1px' }}
+          maskColor="var(--theme-minimap-mask)"
           nodeColor={(node) => {
             switch (node.type) {
               case 'start': return '#10b981';
@@ -165,15 +169,15 @@ const WorkflowCanvasInner: React.FC = () => {
       {/* Empty State Overlay */}
       {nodes.length === 0 && (
         <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center z-10">
-          <div className="bg-white/60 backdrop-blur-md px-8 py-6 rounded-2xl border border-slate-200/60 shadow-xl flex flex-col items-center text-center animate-fade-in">
+          <div className="px-8 py-6 rounded-2xl border shadow-xl flex flex-col items-center text-center animate-fade-in transition-colors duration-400" style={{ background: 'var(--theme-panel-bg)', borderColor: 'var(--theme-panel-border)' }}>
             <button
               onClick={() => setShowTemplates(true)}
               className="px-6 py-2.5 bg-gradient-to-br from-[#f06422] to-[#e8530e] hover:opacity-90 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-orange-200/50 pointer-events-auto transition-all transform hover:-translate-y-0.5 active:translate-y-0 font-bold"
             >
               Use Template
             </button>
-            <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">START BUILDING</h2>
-            <p className="text-sm font-medium text-slate-500 mt-2 max-w-[320px] leading-relaxed">
+            <h2 className="text-xl font-extrabold tracking-tight transition-colors duration-400" style={{ color: 'var(--theme-text)' }}>START BUILDING</h2>
+            <p className="text-sm font-medium mt-2 max-w-[320px] leading-relaxed transition-colors duration-400" style={{ color: 'var(--theme-text-muted)' }}>
               Start by dragging a node from the left sidebar, or choose from our 40+ real-world templates with fuzzy matching.
             </p>
           </div>

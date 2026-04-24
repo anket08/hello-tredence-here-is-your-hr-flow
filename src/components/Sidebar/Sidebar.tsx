@@ -70,17 +70,18 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside className="w-full md:w-56 h-auto md:h-full glass-sidebar flex flex-row md:flex-col z-10 shrink-0 overflow-x-auto md:overflow-y-auto">
-      <div className="px-3 md:px-4 py-2 md:pt-4 md:pb-3 shrink-0 flex flex-col justify-center border-r md:border-r-0 md:border-b border-slate-200/40 mr-2 md:mr-0">
-        <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] whitespace-nowrap">Nodes</h2>
-        <p className="text-[9px] text-slate-400 mt-0.5 hidden md:block">Drag onto the canvas</p>
+      <div className="px-3 md:px-4 py-2 md:pt-4 md:pb-3 shrink-0 flex flex-col justify-center border-r md:border-r-0 md:border-b mr-2 md:mr-0 transition-colors duration-400" style={{ borderColor: 'var(--theme-panel-border)' }}>
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.15em] whitespace-nowrap transition-colors duration-400" style={{ color: 'var(--theme-text-muted)' }}>Nodes</h2>
+        <p className="text-[9px] mt-0.5 hidden md:block transition-colors duration-400" style={{ color: 'var(--theme-text-muted)' }}>Drag onto the canvas</p>
       </div>
       <div className="px-2 md:px-3 py-2 md:pb-4 flex-1 flex flex-row md:flex-col gap-1.5 md:overflow-y-auto">
         {nodeItems.map((node) => (
           <div
             key={node.type}
-            className={`group flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 md:py-3 rounded-xl cursor-grab shrink-0
-              bg-white/40 border border-transparent ${node.hoverBg} ${node.borderHover}
-              transition-all duration-200 active:cursor-grabbing sidebar-node-item`}
+            className="group flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 md:py-3 rounded-xl cursor-grab shrink-0 border border-transparent transition-all duration-200 active:cursor-grabbing sidebar-node-item hover:shadow-sm"
+            style={{ background: 'var(--theme-input-bg)', borderColor: 'transparent' }}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = node.color)}
+            onMouseOut={(e) => (e.currentTarget.style.borderColor = 'transparent')}
             onDragStart={(event) => onDragStart(event, node.type, node.title)}
             draggable
           >
@@ -91,8 +92,8 @@ export const Sidebar: React.FC = () => {
               <div className="scale-75 md:scale-100 flex items-center justify-center">{node.icon}</div>
             </div>
             <div className="min-w-0 pr-2 md:pr-0">
-              <div className="font-semibold text-[11px] md:text-[12px] text-slate-700 group-hover:text-slate-900 transition-colors">{node.title}</div>
-              <div className="text-[9px] md:text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors hidden md:block">{node.desc}</div>
+              <div className="font-semibold text-[11px] md:text-[12px] transition-colors duration-400" style={{ color: 'var(--theme-text)' }}>{node.title}</div>
+              <div className="text-[9px] md:text-[10px] transition-colors duration-400 hidden md:block opacity-70" style={{ color: 'var(--theme-text-muted)' }}>{node.desc}</div>
             </div>
           </div>
         ))}
