@@ -38,7 +38,7 @@ export interface EndNodeData extends Record<string, unknown> {
   isSummary?: boolean;
 }
 
-export type WorkflowNodeData = 
+export type WorkflowNodeData =
   | StartNodeData
   | TaskNodeData
   | ApprovalNodeData
@@ -51,7 +51,7 @@ export type ApprovalWorkflowNode = Node<ApprovalNodeData, 'approval'>;
 export type AutomatedWorkflowNode = Node<AutomatedStepNodeData, 'automated'>;
 export type EndWorkflowNode = Node<EndNodeData, 'end'>;
 
-export type WorkflowNode = 
+export type WorkflowNode =
   | StartWorkflowNode
   | TaskWorkflowNode
   | ApprovalWorkflowNode
@@ -59,20 +59,3 @@ export type WorkflowNode =
   | EndWorkflowNode;
 
 export type WorkflowEdge = Edge;
-
-export interface WorkflowState {
-  nodes: WorkflowNode[];
-  edges: WorkflowEdge[];
-  selectedNodeId: string | null;
-  
-  onNodesChange: (changes: any) => void;
-  onEdgesChange: (changes: any) => void;
-  onConnect: (connection: any) => void;
-  addNode: (node: WorkflowNode) => void;
-  updateNodeData: (id: string, data: Partial<WorkflowNodeData>) => void;
-  setSelectedNode: (id: string | null) => void;
-  deleteSelectedElements: () => void;
-  loadSampleWorkflow: () => void;
-  getNodes: () => WorkflowNode[];
-  getEdges: () => WorkflowEdge[];
-}

@@ -16,8 +16,11 @@ import type { NodeType, WorkflowNode } from '../../types/workflow';
 const WorkflowCanvasInner: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
-  const nodes = useStore((s) => s.nodes);
-  const edges = useStore((s) => s.edges);
+  const tabs = useStore((s) => s.tabs);
+  const activeTabId = useStore((s) => s.activeTabId);
+  const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
+  const nodes = activeTab.nodes;
+  const edges = activeTab.edges;
   const onNodesChange = useStore((s) => s.onNodesChange);
   const onEdgesChange = useStore((s) => s.onEdgesChange);
   const onConnect = useStore((s) => s.onConnect);

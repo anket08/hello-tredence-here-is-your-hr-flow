@@ -18,7 +18,7 @@ export const BaseNode: React.FC<BaseNodeProps> = ({ title, icon, children, selec
     <div
       className={clsx(
         "rounded-2xl w-60 transition-all duration-200 overflow-hidden",
-        selected ? "node-glow scale-[1.03]" : "shadow-md hover:shadow-lg",
+        selected ? "node-glow" : "shadow-md hover:shadow-lg",
       )}
       style={{
         background: 'rgba(255,255,255,0.82)',

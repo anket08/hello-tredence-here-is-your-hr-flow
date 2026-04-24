@@ -8,7 +8,13 @@ const inputClass = "w-full border border-slate-200/80 bg-white/60 hover:bg-white
 const labelClass = "text-[10px] font-bold text-slate-400 uppercase tracking-widest";
 
 export const PropertiesPanel: React.FC = () => {
-  const { nodes, selectedNodeId, updateNodeData, deleteSelectedElements } = useStore();
+  const tabs = useStore((s) => s.tabs);
+  const activeTabId = useStore((s) => s.activeTabId);
+  const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
+  const nodes = activeTab.nodes;
+  const selectedNodeId = useStore((s) => s.selectedNodeId);
+  const updateNodeData = useStore((s) => s.updateNodeData);
+  const deleteSelectedElements = useStore((s) => s.deleteSelectedElements);
   const [actions, setActions] = useState<AutomatedAction[]>([]);
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);

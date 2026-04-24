@@ -4,7 +4,11 @@ import { useStore } from '../../store/useStore';
 import { simulateWorkflow } from '../../api/mockApi';
 
 export const SandboxPanel: React.FC = () => {
-  const { nodes, edges } = useStore();
+  const tabs = useStore((s) => s.tabs);
+  const activeTabId = useStore((s) => s.activeTabId);
+  const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
+  const nodes = activeTab.nodes;
+  const edges = activeTab.edges;
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState<{ success: boolean; log: string[] } | null>(null);
@@ -38,7 +42,7 @@ export const SandboxPanel: React.FC = () => {
       {/* Floating Test Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="absolute bottom-5 right-5 bg-gradient-to-r from-[#f06422] to-[#e8530e] hover:from-[#e8530e] hover:to-[#d4561d] text-white rounded-2xl px-5 py-2.5 shadow-lg shadow-orange-200/50 flex items-center gap-2 font-semibold text-sm transition-all hover:scale-105 z-20"
+        className="absolute bottom-5 right-5 bg-gradient-to-r from-[#f06422] to-[#e8530e] hover:from-[#e8530e] hover:to-[#d4561d] text-white rounded-2xl px-5 py-2.5 shadow-lg shadow-orange-200/50 flex items-center gap-2 font-semibold text-sm transition-colors z-20"
       >
         <Play size={16} fill="currentColor" />
         Test Workflow
