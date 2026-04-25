@@ -8,7 +8,7 @@
 [![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Tailwind](https://img.shields.io/badge/Tailwind-v4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 *Designed & engineered by **Anket** for the Tredence Analytics AI Agentic Engineering Internship 2026.*
 
 ![Main Workflow Designer](./docs/hero.png)
