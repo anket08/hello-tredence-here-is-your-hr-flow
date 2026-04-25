@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🟠 Tredence Studio — HR Workflow Designer
+# HR4TREDENCE — HR Workflow Designer
 
 **An Enterprise-Grade HR Workflow Modeler built with React, TypeScript, React Flow & Zustand.**
 
@@ -167,7 +167,7 @@ Added rich clipboard mechanics (`Ctrl+C`, `Ctrl+V`), global history undo/redo (`
 
 <div align="center">
 
-*Engineered with precision for the Tredence Studio AI Agents Engineering team.*
+*Hi there, TREDENCE team. I am the one u are looking 4.*
 
 **[View Live Environment →](https://hr4tredence.netlify.app/)**
 
